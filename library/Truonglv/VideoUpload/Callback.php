@@ -13,8 +13,12 @@ class Truonglv_VideoUpload_Callback
         if (empty($post)) {
             throw new XenForo_Exception('Invalid post data');
         }
+        
+        $attachments = isset($post['attachments']) ? $post['attachments'] : array();
+        if (empty($attachments)) {
+            return '';
+        }
 
-        $attachments = $post['attachments'];
         $videoAsAttachments = array();
 
         foreach ($attachments as $attachmentId => $attachment) {
@@ -96,7 +100,7 @@ class Truonglv_VideoUpload_Callback
         if (!$videoModel) {
             $videoModel = XenForo_Model::create('Truonglv_VideoUpload_Model_Video');
         }
-        
+
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $videoModel;
     }
