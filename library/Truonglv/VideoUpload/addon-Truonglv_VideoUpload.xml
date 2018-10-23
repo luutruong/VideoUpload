@@ -1495,6 +1495,12 @@ $0]]></replace>
 											params="{xen:array '0={$attachment}'}"/></xen:set>
 <xen:if is="{$TVU_videoHtml}">{xen:raw $TVU_videoHtml}<xen:else />$0</xen:if>]]></replace>
     </modification>
+    <modification template="post" modification_key="TVU_renderPostAttachments" description="" execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[/<xen:if is="{\$post.attachments}"><xen:include template="attached_files" \/><\/xen:if>/]]></find>
+      <replace><![CDATA[<xen:callback class="Truonglv_VideoUpload_Callback"
+			  method="renderPostAttachments"
+			  params="{xen:array '0={$post}'}" />]]></replace>
+    </modification>
     <modification template="attachment_editor_attachment" modification_key="TVU_videoButtonInserter" description="" execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<input type="button" value="{xen:phrase delete}" class="button smallButton AttachmentDeleter" data-href="{xen:link 'attachments/delete', $attachment}" />]]></find>
       <replace><![CDATA[$0

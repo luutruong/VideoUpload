@@ -862,7 +862,7 @@ class Truonglv_VideoUpload_FileSums
             'library/Truonglv/VideoUpload/Lib/Spaces/aws/autoloader.php' => '8a7214279d2100338c59f2585af9887a',
             'library/Truonglv/VideoUpload/Installer.php' => '6383b09c0efe6d0af841d48ffcd190c5',
             'library/Truonglv/VideoUpload/DataWriter/Video.php' => '90276648b9bf95e3b681dcdb5038f5c3',
-            'library/Truonglv/VideoUpload/Callback.php' => '360da436e95c14abf6cb9de72949f013',
+            'library/Truonglv/VideoUpload/Callback.php' => 'd57b87a4d6c6f31cc1ef20f49c5953c5',
             'js/Truonglv/VideoUpload/Lib/resumable.js' => 'b79c058be0085e39151787026b233140',
             'js/Truonglv/VideoUpload/Lib/video.min.js' => '689d526ad64f2ebb936bcf4b3369c368',
             'js/Truonglv/VideoUpload/video_upload.min.js' => 'fdc1f0a0b18cc5ca884a26d2a777b4c9',

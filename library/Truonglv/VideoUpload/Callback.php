@@ -7,6 +7,42 @@ class Truonglv_VideoUpload_Callback
 {
     public static $videos = array();
 
+    public static function renderPostAttachments($_, array $params, XenForo_Template_Public $template)
+    {
+        $post = reset($params);
+        if (empty($post)) {
+            throw new XenForo_Exception('Invalid post data');
+        }
+
+        $attachments = $post['attachments'];
+        $videoAsAttachments = array();
+
+        foreach ($attachments as $attachmentId => $attachment) {
+            if (isset(self::$videos[$attachmentId])) {
+                unset($attachments[$attachmentId]);
+
+                $videoAsAttachments[] = $attachment;
+            }
+        }
+
+        $html = '';
+        if (!empty($videoAsAttachments)) {
+            foreach ($videoAsAttachments as $videoAsAttachment) {
+                $html .= self::renderVideoHtml(null, array($videoAsAttachment), $template);
+            }
+        }
+
+        if (!empty($attachments)) {
+            $post['attachments'] = $attachments;
+
+            $html .= $template->create('attached_files', array(
+                'post' => $post
+            ));
+        }
+
+        return $html;
+    }
+
     public static function renderVideoHtml($_, array $params, XenForo_Template_Public $template)
     {
         if (empty(self::$videos)) {
@@ -60,7 +96,8 @@ class Truonglv_VideoUpload_Callback
         if (!$videoModel) {
             $videoModel = XenForo_Model::create('Truonglv_VideoUpload_Model_Video');
         }
-
+        
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $videoModel;
     }
 }
