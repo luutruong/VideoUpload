@@ -14,6 +14,7 @@
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="load_class_XenForo_DataWriter_Discussion_Thread" active="1" hint="XenForo_DataWriter_Discussion_Thread" description="XenForo_DataWriter_Discussion_Thread"/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="load_class_XenForo_DataWriter_Attachment" active="1" hint="XenForo_DataWriter_Attachment" description="XenForo_DataWriter_Attachment"/>
     <listener event_id="load_class_datawriter" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="load_class_4f477c58235ffb475271e2521731d700" active="1" hint="XenForo_DataWriter_DiscussionMessage_Post" description="XenForo_DataWriter_DiscussionMessage_Post"/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="load_class_XenForo_ViewPublic_Attachment_View" active="1" hint="XenForo_ViewPublic_Attachment_View" description="XenForo_ViewPublic_Attachment_View"/>
     <listener event_id="template_create" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="template_create" active="1" hint="thread_view" description=""/>
   </code_event_listeners>
   <cron>

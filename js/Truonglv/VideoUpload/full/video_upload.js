@@ -14,6 +14,7 @@
 
             this.resumable = new Resumable({
                 target: 'misc/tvu-video-upload',
+                query: {
                     _xfToken: XenForo._csrfToken,
                     _xfResponseType: 'json',
                     content_data: JSON.stringify($button.data('payload')),

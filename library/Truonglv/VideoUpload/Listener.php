@@ -55,4 +55,11 @@ class Truonglv_VideoUpload_Listener
             $extend[] = 'Truonglv_VideoUpload_XenForo_AttachmentHandler_Post';
         }
     }
+
+    public static function load_class_XenForo_ViewPublic_Attachment_View($class, array &$extend)
+    {
+        if ($class === 'XenForo_ViewPublic_Attachment_View') {
+            $extend[] = 'Truonglv_VideoUpload_XenForo_ViewPublic_Attachment_View';
+        }
+    }
 }
