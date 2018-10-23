@@ -1,0 +1,6 @@
+.DS_Store
+*.devhelper
+library/Truonglv/DevHelper/Generated
+library/Truonglv/VideoUpload/DevHelper/XFCP
+js/Truonglv/VideoUpload/*.js
+*.map
