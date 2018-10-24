@@ -93,6 +93,10 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
                 return false;
             }
 
+            if (!$this->_checkSecurity($filePart)) {
+                return false;
+            }
+
             return $this->_uploadVideo(new XenForo_Upload($file->getFileName(), $filePart), $hash, $extra);
         }
 
@@ -134,6 +138,36 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         }
 
         return $video;
+    }
+
+    protected function _checkSecurity($path)
+    {
+        $fp = @fopen($path, 'rb');
+        if ($fp) {
+            $previous = '';
+            while (!@feof($fp)) {
+                $content = fread($fp, 256000);
+                $test = $previous . $content;
+                $exists = (
+                    strpos($test, '<?php') !== false
+                    || preg_match('/<script\s+language\s*=\s*(php|"php"|\'php\')\s*>/i', $test)
+                );
+
+                if ($exists) {
+                    @fclose($fp);
+
+                    return false;
+                }
+
+                $previous = $content;
+            }
+
+            @fclose($fp);
+
+            return true;
+        }
+
+        return false;
     }
 
     protected function _uploadVideo(XenForo_Upload $upload, $hash, array $extra)
