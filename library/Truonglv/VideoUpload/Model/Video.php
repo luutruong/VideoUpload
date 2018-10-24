@@ -134,7 +134,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
             $video['streamUrl'] = $remoteUrl;
         } else {
-            $video['streamUrl'] = $attachment['viewUrl'];
+            $video['streamUrl'] = XenForo_Link::buildPublicLink('full:attachments', $attachment);
         }
 
         return $video;
