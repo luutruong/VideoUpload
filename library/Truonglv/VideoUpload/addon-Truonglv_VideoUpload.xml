@@ -95,6 +95,12 @@ step=60</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="60"/>
     </option>
+    <option option_id="TVU_swarmifyKey" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="107"/>
+    </option>
     <option option_id="TVU_useExternalViewUrl" edit_format="radio" data_type="unsigned_integer" can_backup="1">
       <default_value>0</default_value>
       <edit_format_params>0={xen:phrase no}
@@ -106,7 +112,7 @@ step=60</edit_format_params>
       <default_value>videojs</default_value>
       <edit_format_params>native=HTML5 Native Player
 videojs=Video.js Player
-smartvideo=Smart Video Player</edit_format_params>
+smartvideo=Smart Video Player (Swarmify)</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="105"/>
     </option>
@@ -144,6 +150,8 @@ smartvideo=Smart Video Player</edit_format_params>
     <phrase title="option_TVU_spacesBucket_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_spacesRegion" version_id="1000000" version_string="1.0.0"><![CDATA[Space Region]]></phrase>
     <phrase title="option_TVU_spacesRegion_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_swarmifyKey" version_id="1000400" version_string="1.0.4"><![CDATA[Swarmify Key]]></phrase>
+    <phrase title="option_TVU_swarmifyKey_explain" version_id="1000400" version_string="1.0.4"><![CDATA[]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl" version_id="1000000" version_string="1.0.0"><![CDATA[Use video stream url from external service]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl_explain" version_id="1000000" version_string="1.0.0"><![CDATA[If checked, video will use external service (eg: Amazon,...) as possible.]]></phrase>
     <phrase title="option_TVU_videoPlayer" version_id="1000300" version_string="1.0.3"><![CDATA[Video Player]]></phrase>
@@ -184,6 +192,21 @@ smartvideo=Smart Video Player</edit_format_params>
 			</p>
 		</video>
 	</div>
+</xen:if>]]></template>
+    <template title="tvu_swarmify_setup" version_id="1000400" version_string="1.0.4"><![CDATA[<xen:if is="{$xenOptions.TVU_videoPlayer} === 'smartvideo'">
+	<script data-cfasync="false">
+		var swarmoptions = {
+			swarmcdnkey: "{$xenOptions.TVU_swarmifyKey}",
+			autoreplace: {
+				youtube: false,
+				videotag: true
+			},
+			theme: {
+				primaryColor: "#04ae3c"
+			}
+		};
+	</script>
+	<script data-cfasync="false" src="https://assets.swarmcdn.com/cross/swarmdetect.js"></script>
 </xen:if>]]></template>
     <template title="tvu_upload_video_button" version_id="1000000" version_string="1.0.0"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
 	<xen:require js="js/Truonglv/VideoUpload/Lib/resumable.js" />
@@ -1503,6 +1526,11 @@ $0]]></replace>
       <find><![CDATA[<xen:include template="attachment_upload_button" />]]></find>
       <replace><![CDATA[<xen:include template="tvu_upload_video_button" />
 $0]]></replace>
+    </modification>
+    <modification template="page_container_js_body" modification_key="TVU_addSwarmifySetup" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[</script>]]></find>
+      <replace><![CDATA[$0
+<xen:include template="tvu_swarmify_setup" />]]></replace>
     </modification>
     <modification template="thread_create" modification_key="TVU_addUploadVideoButton" description="" execution_order="10" enabled="1" action="str_replace">
       <find><![CDATA[<input type="submit" value="{xen:phrase create_thread}" accesskey="s" class="button primary" />]]></find>
