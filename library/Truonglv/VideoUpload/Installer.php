@@ -74,11 +74,41 @@ class Truonglv_VideoUpload_Installer
 
     public static function installCustomized($existingAddOn, $addOnData)
     {
-        // customized install script goes here
-    }
+        $db = XenForo_Application::getDb();
 
+        $db->query("
+            INSERT IGNORE INTO xf_content_type
+                (content_type, addon_id, fields)
+            VALUES
+                ('tvu_video', 'Truonglv_VideoUpload', '')
+        ");
+
+        $db->query("
+            INSERT IGNORE INTO xf_content_type_field
+                (content_type, field_name, field_value)
+            VALUES
+                ('tvu_video', 'stats_handler_class', 'Truonglv_VideoUpload_StatsHandler_Video')
+        ");
+
+        /** @var XenForo_Model_ContentType $contentTypeModel */
+        $contentTypeModel = XenForo_Model::create('XenForo_Model_ContentType');
+        $contentTypeModel->rebuildContentTypeCache();
+    }
+    
     public static function uninstallCustomized()
     {
-        // customized uninstall script goes here
+        $db = XenForo_Application::getDb();
+
+        $db->delete('xf_content_type', 'addon_id = ' . $db->quote('Truonglv_VideoUpload'));
+
+        $contentTypesQuoted = $db->quote(array(
+            'tvu_video'
+        ));
+
+        $db->delete('xf_content_type_field', 'content_type IN (' . $contentTypesQuoted . ')');
+
+        /** @var XenForo_Model_ContentType $contentTypeModel */
+        $contentTypeModel = XenForo_Model::create('XenForo_Model_ContentType');
+        $contentTypeModel->rebuildContentTypeCache();
     }
 }

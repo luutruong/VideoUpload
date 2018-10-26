@@ -151,6 +151,7 @@ smartvideo=Smart Video Player</edit_format_params>
     <phrase title="permission_general_tvu_uploadVideos" version_id="1000000" version_string="1.0.0"><![CDATA[[tl] Thread Video Upload: Upload Videos]]></phrase>
     <phrase title="tvu_an_error_occurred_while_process_video" version_id="1000000" version_string="1.0.0"><![CDATA[An error occurred while processing your video. Please try again.]]></phrase>
     <phrase title="tvu_insert_video" version_id="1000100" version_string="1.0.1"><![CDATA[Insert Video]]></phrase>
+    <phrase title="tvu_stats_video_uploaded" version_id="1000400" version_string="1.0.4"><![CDATA[[tl] Thread Video Upload: Videos]]></phrase>
     <phrase title="tvu_upload_video" version_id="1000000" version_string="1.0.0"><![CDATA[Upload Video]]></phrase>
     <phrase title="tvu_your_video_was_uploaded_successfully" version_id="1000000" version_string="1.0.0"><![CDATA[Your video was uploaded successfully.]]></phrase>
     <phrase title="tvu_you_may_only_upload_an_video_per_post" version_id="1000000" version_string="1.0.0"><![CDATA[You may only upload an video per post.]]></phrase>
