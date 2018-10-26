@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Truonglv_VideoUpload" title="[tl] Thread Video Upload" version_string="1.0.3" version_id="1000300" url="" install_callback_class="Truonglv_VideoUpload_Installer" install_callback_method="install" uninstall_callback_class="Truonglv_VideoUpload_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Truonglv_VideoUpload" title="[tl] Thread Video Upload" version_string="1.0.4" version_id="1000400" url="" install_callback_class="Truonglv_VideoUpload_Installer" install_callback_method="install" uninstall_callback_class="Truonglv_VideoUpload_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -102,6 +102,14 @@ step=60</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="5"/>
     </option>
+    <option option_id="TVU_videoPlayer" edit_format="radio" data_type="string" can_backup="1">
+      <default_value>videojs</default_value>
+      <edit_format_params>native=HTML5 Native Player
+videojs=Video.js Player
+smartvideo=Smart Video Player</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="105"/>
+    </option>
   </optiongroups>
   <permissions>
     <permission_groups/>
@@ -138,6 +146,8 @@ step=60</edit_format_params>
     <phrase title="option_TVU_spacesRegion_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl" version_id="1000000" version_string="1.0.0"><![CDATA[Use video stream url from external service]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl_explain" version_id="1000000" version_string="1.0.0"><![CDATA[If checked, video will use external service (eg: Amazon,...) as possible.]]></phrase>
+    <phrase title="option_TVU_videoPlayer" version_id="1000300" version_string="1.0.3"><![CDATA[Video Player]]></phrase>
+    <phrase title="option_TVU_videoPlayer_explain" version_id="1000300" version_string="1.0.3"><![CDATA[]]></phrase>
     <phrase title="permission_general_tvu_uploadVideos" version_id="1000000" version_string="1.0.0"><![CDATA[[tl] Thread Video Upload: Upload Videos]]></phrase>
     <phrase title="tvu_an_error_occurred_while_process_video" version_id="1000000" version_string="1.0.0"><![CDATA[An error occurred while processing your video. Please try again.]]></phrase>
     <phrase title="tvu_insert_video" version_id="1000100" version_string="1.0.1"><![CDATA[Insert Video]]></phrase>
@@ -148,22 +158,33 @@ step=60</edit_format_params>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="tvu_bb_code_attach_video" version_id="1000101" version_string="1.0.1"><![CDATA[<xen:require css="tvu_video_js.css" />
-<xen:require css="tvu_video_skin.css" />
-<xen:require js="js/Truonglv/VideoUpload/Lib/video.min.js" />
-<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
+    <template title="tvu_bb_code_attach_video" version_id="1000400" version_string="1.0.4"><![CDATA[<xen:set var="$TVU_videoPlayer">{$xenOptions.TVU_videoPlayer}</xen:set>
+<xen:if is="{$TVU_videoPlayer} === 'videojs'">
+	<xen:require css="tvu_video_js.css" />
+	<xen:require css="tvu_video_skin.css" />
+	<xen:require js="js/Truonglv/VideoUpload/Lib/video.min.js" />
+	<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
+</xen:if>
 
-<div class="tvu-video-container" style="max-width:{$width}px;max-height:{$height}px">
-	<video controls preload="true" width="{$width}"
-	   class="video-js vjs-fluid TVU_VideoSetup"
-	   height="{$height}" id="tvu-video-{$video.video_id}">
-	<source src="{$video.streamUrl}" type="video/{$attachment.extension}" />
-	<p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-    </p>
-</video>
-</div>]]></template>
+<xen:if is="{$TVU_videoPlayer} === 'smartvideo'">
+	<div class="tvu-video-container" style="max-width:{$width}px">
+		<smartvideo class="swarm-fluid" src="{$video.streamUrl}"
+					id="tvu-video-{$video.video_id}"
+					width="{$width}" height="{$height}" controls playsinline></smartvideo>
+	</div>
+<xen:else />
+	<div class="tvu-video-container" style="max-width:{$width}px;max-height:{$height}px">
+		<video controls preload="true" width="{$width}"
+			   class="video-js vjs-fluid TVU_VideoSetup"
+			   height="{$height}" id="tvu-video-{$video.video_id}">
+			<source src="{$video.streamUrl}" type="video/{$attachment.extension}" />
+			<p class="vjs-no-js">
+			  To view this video please enable JavaScript, and consider upgrading to a web browser that
+			  <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+			</p>
+		</video>
+	</div>
+</xen:if>]]></template>
     <template title="tvu_upload_video_button" version_id="1000000" version_string="1.0.0"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
 	<xen:require js="js/Truonglv/VideoUpload/Lib/resumable.js" />
 	<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
