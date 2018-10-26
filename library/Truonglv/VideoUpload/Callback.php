@@ -77,12 +77,15 @@ class Truonglv_VideoUpload_Callback
             $height = $ratio * $attachment['height'];
         }
 
-        return $template->create('tvu_bb_code_attach_video', array(
+        $params = array(
             'video' => $video,
             'attachment' => $attachment,
             'width' => $width,
-            'height' => $height
-        ));
+            'height' => $height,
+            'videoPlayerType' => Truonglv_VideoUpload_Option::get('videoPlayer')
+        );
+
+        return $template->create('tvu_bb_code_attach_video', $params);
     }
 
     public static function hasAttachmentVideo($fileName)

@@ -158,15 +158,14 @@ smartvideo=Smart Video Player</edit_format_params>
   <route_prefixes/>
   <style_properties/>
   <templates>
-    <template title="tvu_bb_code_attach_video" version_id="1000400" version_string="1.0.4"><![CDATA[<xen:set var="$TVU_videoPlayer">{$xenOptions.TVU_videoPlayer}</xen:set>
-<xen:if is="{$TVU_videoPlayer} === 'videojs'">
+    <template title="tvu_bb_code_attach_video" version_id="1000400" version_string="1.0.4"><![CDATA[<xen:if is="{$videoPlayerType} === 'videojs'">
 	<xen:require css="tvu_video_js.css" />
 	<xen:require css="tvu_video_skin.css" />
 	<xen:require js="js/Truonglv/VideoUpload/Lib/video.min.js" />
 	<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
 </xen:if>
 
-<xen:if is="{$TVU_videoPlayer} === 'smartvideo'">
+<xen:if is="{$videoPlayerType} === 'smartvideo'">
 	<div class="tvu-video-container" style="max-width:{$width}px">
 		<smartvideo class="swarm-fluid" src="{$video.streamUrl}"
 					id="tvu-video-{$video.video_id}"
@@ -175,7 +174,7 @@ smartvideo=Smart Video Player</edit_format_params>
 <xen:else />
 	<div class="tvu-video-container" style="max-width:{$width}px;max-height:{$height}px">
 		<video controls preload="true" width="{$width}"
-			   class="video-js vjs-fluid TVU_VideoSetup"
+			   class="TVU_video{xen:if '{$videoPlayerType}==="videojs"', ' video-js vjs-fluid TVU_VideoSetup'}"
 			   height="{$height}" id="tvu-video-{$video.video_id}">
 			<source src="{$video.streamUrl}" type="video/{$attachment.extension}" />
 			<p class="vjs-no-js">
