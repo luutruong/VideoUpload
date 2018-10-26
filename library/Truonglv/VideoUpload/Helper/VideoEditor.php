@@ -93,6 +93,7 @@ class Truonglv_VideoUpload_Helper_VideoEditor
             . ' -preset fast '
             . ' -profile:v main '
             . ' -acodec aac '
+            . ' -pix_fmt yuv420p '
             . ' -strict -2 '
             . escapeshellarg($output)
             . ' -hide_banner 2>&1';
