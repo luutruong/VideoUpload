@@ -83,21 +83,35 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             if ($ourFileSize !== $totalSize) {
                 @unlink($filePart);
 
+                $this->_logError(sprintf(
+                    'File size mismatch. $uploadedSize=%d $expectedSize=%d',
+                    $ourFileSize,
+                    $totalSize
+                ));
+
                 return false;
             }
 
-            $extra = array();
-            if (!$this->_doCropVideoDuration($filePart, $extra)) {
-                @unlink($filePart);
+            $videoEditor = new Truonglv_VideoUpload_Helper_VideoEditor($filePart);
+            $newPath = $videoEditor->save();
+
+            if (empty($newPath)) {
+                $this->_logError($videoEditor->getLastError());
 
                 return false;
             }
 
-            if (!$this->_checkSecurity($filePart)) {
-                return false;
+            $extra = array(
+                'width' => $videoEditor->getWidth(),
+                'height' => $videoEditor->getHeight()
+            );
+
+            $fileName = $file->getFileName();
+            if ($fileExtension !== $videoEditor->getExtension()) {
+                $fileName = str_replace(".{$fileExtension}", ".{$videoEditor->getExtension()}", $fileName);
             }
 
-            return $this->_uploadVideo(new XenForo_Upload($file->getFileName(), $filePart), $hash, $extra);
+            return $this->_uploadVideo(new XenForo_Upload($fileName, $newPath), $hash, $extra);
         }
 
         $session->set($hash, $chunkNumber);
@@ -140,36 +154,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         return $video;
     }
 
-    protected function _checkSecurity($path)
-    {
-        $fp = @fopen($path, 'rb');
-        if ($fp) {
-            $previous = '';
-            while (!@feof($fp)) {
-                $content = fread($fp, 256000);
-                $test = $previous . $content;
-                $exists = (
-                    strpos($test, '<?php') !== false
-                    || preg_match('/<script\s+language\s*=\s*(php|"php"|\'php\')\s*>/i', $test)
-                );
-
-                if ($exists) {
-                    @fclose($fp);
-
-                    return false;
-                }
-
-                $previous = $content;
-            }
-
-            @fclose($fp);
-
-            return true;
-        }
-
-        return false;
-    }
-
     protected function _uploadVideo(XenForo_Upload $upload, $hash, array $extra)
     {
         /** @var XenForo_Model_Attachment $attachmentModel */
@@ -197,63 +181,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $dw->save();
 
         return $attachmentId;
-    }
-
-    protected function _doCropVideoDuration($filePath, array &$extra)
-    {
-        $ffmpeg = Truonglv_VideoUpload_Option::get('ffmpeg');
-        $maxDuration = Truonglv_VideoUpload_Option::get('maxVideoDuration');
-
-        if (empty($ffmpeg) || empty($maxDuration)) {
-            return true;
-        }
-
-        $commandVideoInfo = $ffmpeg . ' -i ' . escapeshellarg($filePath) . ' 2>&1';
-        exec($commandVideoInfo, $output);
-        if (empty($output)) {
-            return false;
-        }
-
-        $output = implode("\n", $output);
-
-        preg_match('/Duration:\s+(\d+:)?(\d+:)?(\d+\.\d+)\,/', $output, $durationMatches);
-        if (empty($durationMatches)) {
-            $this->_logError('Regex duration failed. $content=' . $output);
-
-            return false;
-        }
-
-        preg_match('/(\b[^0]\d+x[^0]\d+\b)/m', $output, $resolutionMatches);
-        if (empty($resolutionMatches)) {
-            $this->_logError('Regex resolution failed. $content=' . $output);
-
-            return false;
-        }
-
-        list($width, $height) = explode('x', $resolutionMatches[1]);
-
-        $extra['width'] = intval($width);
-        $extra['height'] = intval($height);
-
-        $duration = intval($durationMatches[1]) * 3600 + intval($durationMatches[2]) * 60 + intval($durationMatches[3]);
-        if ($duration <= $maxDuration) {
-            return true;
-        }
-
-        $outputFile = dirname($filePath) . '/copy-' . basename($filePath);
-
-        $command = $ffmpeg . ' -i ' . escapeshellarg($filePath)
-            . ' -ss 00:00:00 '
-            . ' -t 00:01:00'
-            . ' -c copy '
-            . ' ' . escapeshellarg($outputFile)
-            . ' 2>&1';
-        exec($command);
-
-        @unlink($filePath);
-        XenForo_Helper_File::safeRename($outputFile, $filePath);
-
-        return true;
     }
 
     protected function _logError($message)

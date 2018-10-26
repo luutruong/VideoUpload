@@ -37,6 +37,13 @@
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="220"/>
     </option>
+    <option option_id="TVU_autoConvertMp4" edit_format="radio" data_type="unsigned_integer" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params>0={xen:phrase no}
+1={xen:phrase yes}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="210"/>
+    </option>
     <option option_id="TVU_baseUrl" edit_format="radio" data_type="string" can_backup="1">
       <default_value>cdn.digitaloceanspaces.com</default_value>
       <edit_format_params>cdn.digitaloceanspaces.com=cdn.digitaloceanspaces.com
@@ -132,6 +139,8 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="option_TVU_allowedVideoExtensions_explain" version_id="1000000" version_string="1.0.0"><![CDATA[Each extension should be separator by comma (",")]]></phrase>
     <phrase title="option_TVU_allowGuestViewVideos" version_id="1000002" version_string="1.0.0"><![CDATA[Allow guest can view videos]]></phrase>
     <phrase title="option_TVU_allowGuestViewVideos_explain" version_id="1000002" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_autoConvertMp4" version_id="1000500" version_string="1.0.5"><![CDATA[Automatically convert videos to mp4 format]]></phrase>
+    <phrase title="option_TVU_autoConvertMp4_explain" version_id="1000500" version_string="1.0.5"><![CDATA[]]></phrase>
     <phrase title="option_TVU_baseUrl" version_id="1000001" version_string="1.0.0"><![CDATA[Base URL]]></phrase>
     <phrase title="option_TVU_baseUrl_explain" version_id="1000001" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_chunkSize" version_id="1000000" version_string="1.0.0"><![CDATA[Chunk Size (KB)]]></phrase>
