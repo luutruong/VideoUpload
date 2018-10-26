@@ -223,7 +223,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             return false;
         }
 
-        preg_match('/Stream\s+\#0:0.+\,\s+(\d+x\d+)/', $output, $resolutionMatches);
+        preg_match('/(\b[^0]\d+x[^0]\d+\b)/m', $output, $resolutionMatches);
         if (empty($resolutionMatches)) {
             $this->_logError('Regex resolution failed. $content=' . $output);
 

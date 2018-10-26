@@ -13,7 +13,7 @@ class Truonglv_VideoUpload_Callback
         if (empty($post)) {
             throw new XenForo_Exception('Invalid post data');
         }
-        
+
         $attachments = isset($post['attachments']) ? $post['attachments'] : array();
         if (empty($attachments)) {
             return '';
@@ -39,9 +39,10 @@ class Truonglv_VideoUpload_Callback
         if (!empty($attachments)) {
             $post['attachments'] = $attachments;
 
-            $html .= $template->create('attached_files', array(
-                'post' => $post
-            ));
+            $params = $template->getParams();
+            $params['post'] = $post;
+
+            $html .= $template->create('attached_files', $params);
         }
 
         return $html;
