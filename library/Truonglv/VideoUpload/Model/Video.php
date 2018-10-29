@@ -8,7 +8,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
      * @return bool|int|XenForo_Phrase
      * @throws XenForo_Exception
      */
-    public function uploadChunkFile(XenForo_Upload $file, array $input)
+    public function uploadChunkFile(XenForo_Upload $file, $hash, $fileName, $chunkNumber)
     {
         if (!$file->isValid()) {
             $errors = $file->getErrors();
@@ -16,13 +16,10 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             return reset($errors);
         }
 
-        $fileExtension = XenForo_Helper_File::getFileExtension($input['resumableFilename']);
+        $fileExtension = XenForo_Helper_File::getFileExtension($fileName);
         if (!Truonglv_VideoUpload_Option::isAllowedExtension($fileExtension)) {
             return new XenForo_Phrase('uploaded_file_does_not_have_an_allowed_extension');
         }
-
-        $hash = $input['hash'];
-        $chunkNumber = $input['resumableChunkNumber'];
 
         $filePart = sprintf(
             '%s/tvu_video_upload/%s.%s%d',
@@ -90,6 +87,10 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
     {
         $fileExtension = XenForo_Helper_File::getFileExtension($fileName);
         $mergedPath = $this->_doMergeParts($totalChunks, $hash, $fileExtension);
+
+        if (!file_exists($mergedPath)) {
+            return false;
+        }
 
         clearstatcache();
         $ourFileSize = filesize($mergedPath);

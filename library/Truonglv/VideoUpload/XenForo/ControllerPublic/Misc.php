@@ -8,10 +8,10 @@ class Truonglv_VideoUpload_XenForo_ControllerPublic_Misc extends XFCP_Truonglv_V
 
         $file = XenForo_Upload::getUploadedFile('file');
         $filtered = $this->_input->filter(array(
-            'resumableChunkNumber' => XenForo_Input::UINT,
-            'resumableTotalSize' => XenForo_Input::UINT,
-            'resumableFilename' => XenForo_Input::STRING,
-            'resumableTotalChunks' => XenForo_Input::UINT,
+            'flowChunkNumber' => XenForo_Input::UINT,
+            'flowTotalSize' => XenForo_Input::UINT,
+            'flowFilename' => XenForo_Input::STRING,
+            'flowTotalChunks' => XenForo_Input::UINT,
             'hash' => XenForo_Input::STRING,
             'content_data' => XenForo_Input::STRING,
             'is_completed' => XenForo_Input::BOOLEAN
@@ -76,15 +76,16 @@ class Truonglv_VideoUpload_XenForo_ControllerPublic_Misc extends XFCP_Truonglv_V
 
         if ($filtered['is_completed']) {
             $attachmentId = $videoModel->uploadVideo(
-                $filtered['resumableTotalChunks'],
-                $filtered['resumableTotalSize'],
+                $filtered['flowTotalChunks'],
+                $filtered['flowTotalSize'],
                 $filtered['hash'],
-                $filtered['resumableFilename']
+                $filtered['flowFilename']
             );
 
             if (empty($attachmentId)) {
                 return $this->responseError(
-                    new XenForo_Phrase('tvu_an_error_occurred_while_process_video')
+                    new XenForo_Phrase('tvu_an_error_occurred_while_process_video'),
+                    400
                 );
             }
 
@@ -102,7 +103,13 @@ class Truonglv_VideoUpload_XenForo_ControllerPublic_Misc extends XFCP_Truonglv_V
 
             return $this->responseView('XenForo_ViewPublic_Attachment_DoUpload', '', $params);
         } else {
-            $success = $videoModel->uploadChunkFile($file, $filtered);
+            $success = $videoModel->uploadChunkFile(
+                $file,
+                $filtered['hash'],
+                $filtered['flowFilename'],
+                $filtered['flowChunkNumber']
+            );
+
             if ($success === false || ($success instanceof XenForo_Phrase)) {
                 $error = ($success === false)
                     ? new XenForo_Phrase('tvu_an_error_occurred_while_process_video'):

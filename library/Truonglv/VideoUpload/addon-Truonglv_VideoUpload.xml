@@ -226,8 +226,8 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
 	</script>
 	<script data-cfasync="false" src="https://assets.swarmcdn.com/cross/swarmdetect.js"></script>
 </xen:if>]]></template>
-    <template title="tvu_upload_video_button" version_id="1000501" version_string="1.0.5"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
-	<xen:require js="js/Truonglv/VideoUpload/Lib/resumable.js" />
+    <template title="tvu_upload_video_button" version_id="1000600" version_string="1.0.6"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
+	<xen:require js="js/flow.js/flow-rollup.min.js" />
 	<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
 
 	<input type="button" 

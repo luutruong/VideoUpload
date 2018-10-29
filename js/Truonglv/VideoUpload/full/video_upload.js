@@ -24,127 +24,123 @@
                 maxFiles: 1,
                 testChunks: false,
                 forceChunkSize: true,
-                simultaneousUploads: $button.data('simultaneousuploads') || 3
+                simultaneousUploads: $button.data('simultaneousuploads') || 3,
+                readFileFn: function (fileObj, startByte, endByte, fileType, chunk) {
+                    var function_name = 'slice';
+
+                    if (fileObj.file.slice) {
+                        function_name =  'slice';
+                    } else if (fileObj.file.mozSlice) {
+                        function_name = 'mozSlice';
+                    } else if (fileObj.file.webkitSlice) {
+                        function_name = 'webkitSlice';
+                    }
+
+                    if (!fileType) {
+                        fileType = '';
+                    }
+
+                    chunk.readFinished(fileObj.file[function_name](startByte, endByte, fileType));
+                },
+                allowDuplicateUploads: true
             };
-            this.resumable = new Resumable(this.config);
+            this.flow = new Flow(this.config);
 
-            this.resumable.assignBrowse(this.$button);
+            this.flow.assignBrowse(this.$button, false, false, {
+                accept: '.' + $button.data('extensions').toLowerCase().replace(/,/g, ',.')
+            });
 
-            this.resumable.on('fileAdded', $.context(this, 'onFileAdded'));
-            this.resumable.on('fileError', $.context(this, 'onFileError'));
-            this.resumable.on('fileProgress', $.context(this, 'onFileProgress'));
-            this.resumable.on('complete', $.context(this, 'onComplete'));
+            this.flow.on('fileAdded', $.context(this, 'onFileAdded'));
+            this.flow.on('fileError', $.context(this, 'onFileError'));
+            this.flow.on('fileProgress', $.context(this, 'onFileProgress'));
+            this.flow.on('complete', $.context(this, 'onComplete'));
+            this.flow.on('filesSubmitted', $.context(this, 'onFilesSubmitted'));
 
             this._file = null;
         },
 
+        onFilesSubmitted: function () {
+            this.flow.upload();
+        },
+
         onComplete: function () {
-            if (this._file === null) {
+            if (this._file === null
+                || this._file._prevUploadedSize !== this._file.size
+            ) {
+                this.disableUpload(false);
+
                 return;
             }
 
-            if (!this._file.isComplete()) {
-                return;
-            }
-
-            var data = $.extend(this.config.query, {
-                resumableTotalChunks: this._file.chunks.length,
-                resumableFilename: this._file.fileName,
-                resumableTotalSize: this._file.size,
-                is_completed: 1
-            });
-
-            var _this = this;
+            var _this = this, file = this._file, data;
+            data = {
+                flowTotalChunks: file.chunks.length,
+                flowFilename: file.name,
+                flowTotalSize: file.size,
+                is_completed: 1,
+                content_data: this.config.query.content_data,
+                hash: this.config.query.hash
+            };
 
             XenForo.ajax(this.config.target, data, function (ajaxData) {
-                _this.disableUpload(false);
-
                 if (XenForo.hasResponseError(ajaxData)) {
                     _this.$attachUploader.trigger({
                         type: 'AttachmentUploadError',
-                        file: _this._file.file,
+                        file: file,
                         message: _this.$button.data('file-error'),
-                        ajaxData: { error: [ _this.$button.data('file-error') ]}
+                        ajaxData: { error: [ _this.$button.data('file-error') ]},
+                        flow: _this.flow
                     });
-
-                    _this.resumable.removeFile(_this._file);
 
                     return;
                 }
 
                 _this.$attachUploader.trigger({
                     type: 'AttachmentUploaded',
-                    file: _this._file.file,
-                    ajaxData: ajaxData
+                    file: file,
+                    ajaxData: ajaxData,
+                    flow: _this.flow
                 });
+            }).always(function () {
+                _this.disableUpload(false);
+                _this.flow.removeFile(_this._file);
+                _this._file = null;
             });
         },
 
         onFileAdded: function (file) {
-            var fileExt = file.fileName.substr(file.fileName.lastIndexOf('.') + 1).toLowerCase(), _this = this;
-            
-            if (this.allowExtensions.indexOf(fileExt) === -1) {
-                XenForo.alert(this.$button.data('error'));
-
-                this.resumable.removeFile(file);
-
-                return;
-            }
-
             this.disableUpload(true);
+
             this._file = file;
 
             var event = $.Event('AttachmentQueued');
-            event.file = file.file;
+            event.file = file;
+            event.flow = this.flow;
             event.isImage = false;
             this.$attachUploader.trigger(event);
-
-            // begin upload file.
-            this.resumable.upload();
-
-            $('.AttachmentCanceller').on('click', function (e) {
-                var $target = $(e.target),
-                    $template = $target.closest('.AttachedFile');
-
-                if ($template.attr('id') === file.uniqueIdentifier) {
-                    _this._file = null;
-
-                    file.cancel();
-
-                    _this.disableUpload(false);
-                    _this.resumable.removeFile(file);
-                }
-            });
         },
 
-        onFileProgress: function (file, message) {
-            if (message === undefined) {
-                return;
-            }
+        onFileProgress: function (file) {
+            file.id = file.uniqueIdentifier;
 
             this.$attachUploader.trigger({
                 type: 'AttachmentUploadProgress',
-                file: file.file,
-                bytes: file.progress() * file.file.size
+                file: file,
+                bytes: Math.round(file.progress() * file.size),
+                flow: this.flow
             });
         },
         
         onFileError: function (file, message) {
-            var jsonError, _this = this;
-            try {
-                jsonError = JSON.parse(message);
-            } catch (e) {
-            }
-
             this.$attachUploader.trigger({
                 type: 'AttachmentUploadError',
-                file: file.file,
-                message: this.$button.data('file-error'),
-                ajaxData: jsonError || { error: [ this.$button.data('file-error') ]}
+                file: file,
+                message: message,
+                ajaxData: { error: [ this.$button.data('file-error') ]},
+                flow: this.flow
             });
 
-            this.resumable.removeFile(file);
-            this._file = null;
+            // this.removeFile(file);
 
             setTimeout(function () {
                 _this.disableUpload(false); }, 1000);
