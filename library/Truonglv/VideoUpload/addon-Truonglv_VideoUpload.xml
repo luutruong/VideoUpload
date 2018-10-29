@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="Truonglv_VideoUpload" title="[tl] Thread Video Upload" version_string="1.0.5" version_id="1000501" url="" install_callback_class="Truonglv_VideoUpload_Installer" install_callback_method="install" uninstall_callback_class="Truonglv_VideoUpload_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="Truonglv_VideoUpload" title="[tl] Thread Video Upload" version_string="1.0.6" version_id="1000600" url="" install_callback_class="Truonglv_VideoUpload_Installer" install_callback_method="install" uninstall_callback_class="Truonglv_VideoUpload_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -78,6 +78,13 @@ step=60</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="130"/>
     </option>
+    <option option_id="TVU_simultaneousUploads" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>5</default_value>
+      <edit_format_params>min=1
+max=20</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="250"/>
+    </option>
     <option option_id="TVU_spacesApiKey" edit_format="textbox" data_type="string" can_backup="1">
       <default_value></default_value>
       <edit_format_params></edit_format_params>
@@ -148,9 +155,11 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="option_TVU_ffmpeg" version_id="1000000" version_string="1.0.0"><![CDATA[`ffmpeg` path]]></phrase>
     <phrase title="option_TVU_ffmpeg_explain" version_id="1000000" version_string="1.0.0"><![CDATA[The absolute path to `ffmpeg` process.]]></phrase>
     <phrase title="option_TVU_maxUploadPerProcess" version_id="1000000" version_string="1.0.0"><![CDATA[Maximum videos upload per process]]></phrase>
-    <phrase title="option_TVU_maxUploadPerProcess_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_maxUploadPerProcess_explain" version_id="1000501" version_string="1.0.5"><![CDATA[The maximum videos upload to DigitalOcean Spaces.]]></phrase>
     <phrase title="option_TVU_maxVideoDuration" version_id="1000000" version_string="1.0.0"><![CDATA[Maximum video duration (seconds)]]></phrase>
     <phrase title="option_TVU_maxVideoDuration_explain" version_id="1000000" version_string="1.0.0"><![CDATA[If the given video has duration over this value, the video will but cut off to this value. Set to 0 to unlimited.]]></phrase>
+    <phrase title="option_TVU_simultaneousUploads" version_id="1000501" version_string="1.0.5"><![CDATA[Maximum simultaneous uploads]]></phrase>
+    <phrase title="option_TVU_simultaneousUploads_explain" version_id="1000501" version_string="1.0.5"><![CDATA[]]></phrase>
     <phrase title="option_TVU_spacesApiKey" version_id="1000000" version_string="1.0.0"><![CDATA[Spaces API Key]]></phrase>
     <phrase title="option_TVU_spacesApiKey_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_spacesApiSecret" version_id="1000000" version_string="1.0.0"><![CDATA[Space API Secret Key]]></phrase>
@@ -217,7 +226,7 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
 	</script>
 	<script data-cfasync="false" src="https://assets.swarmcdn.com/cross/swarmdetect.js"></script>
 </xen:if>]]></template>
-    <template title="tvu_upload_video_button" version_id="1000000" version_string="1.0.0"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
+    <template title="tvu_upload_video_button" version_id="1000501" version_string="1.0.5"><![CDATA[<xen:if is="{$attachmentParams.content_type} === 'post' AND {$visitor.permissions.general.tvu_uploadVideos}">
 	<xen:require js="js/Truonglv/VideoUpload/Lib/resumable.js" />
 	<xen:require js="js/Truonglv/VideoUpload/video_upload.min.js" />
 
@@ -227,6 +236,7 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
 		   data-error="{xen:escape {xen:phrase uploaded_file_does_not_have_an_allowed_extension}}"
 		   data-chunk="{xen:calc '{$xenOptions.TVU_chunkSize} * 1024'}"
 		   data-hash="{$attachmentParams.hash}"
+		   data-simultaneousUploads={$xenOptions.TVU_simultaneousUploads}
 		   data-payload="{xen:escape {xen:helper json, $attachmentParams.content_data}}"
 		   data-success="{xen:escape {xen:phrase tvu_your_video_was_uploaded_successfully}}"
 		   data-file-error="{xen:escape {xen:phrase tvu_an_error_occurred_while_process_video}}"

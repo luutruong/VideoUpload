@@ -21,12 +21,12 @@
                     hash: $button.data('hash')
                 },
                 chunkSize: $button.data('chunk'),
-                simultaneousUploads: 1,
                 maxFiles: 1,
                 testChunks: false,
-                forceChunkSize: true
+                forceChunkSize: true,
+                simultaneousUploads: $button.data('simultaneousuploads') || 3
             });
-
+            
             this.resumable.assignBrowse(this.$button);
 
             this.resumable.on('fileAdded', $.context(this, 'onFileAdded'));

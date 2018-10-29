@@ -27,10 +27,11 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $totalSize = $input['resumableTotalSize'];
 
         $filePart = sprintf(
-            '%s/tvu_video_upload/%s.%s',
+            '%s/tvu_video_upload/%s.%s%d',
             XenForo_Helper_File::getInternalDataPath(),
             $hash,
-            $fileExtension
+            $fileExtension,
+            $chunkNumber
         );
 
         $tempDir = dirname($filePart);
@@ -38,50 +39,24 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             XenForo_Helper_File::createDirectory($tempDir);
         }
 
-        $session = XenForo_Application::getSession();
+        $tempFile = $file->getTempFile();
 
-        if ($chunkNumber > 1) {
-            if (!file_exists($filePart)) {
-                return false;
-            }
-
-            $uploadedChunk = (int) $session->get($hash);
-
-            if ($chunkNumber > 1
-                && $chunkNumber < $totalChunks
-                && $chunkNumber !== ($uploadedChunk + 1)
-            ) {
-                return false;
-            }
-        }
-
-        $fp = fopen($filePart, ($chunkNumber === 1) ? 'w' : 'a');
-        if (!flock($fp, LOCK_EX)) {
-            $this->_logError('Cannot lock file: ' . $filePart);
+        if (!XenForo_Helper_File::safeRename($tempFile, $filePart)) {
+            $this->_logError(sprintf('Cannot copy file. $source=%s $dest=%s',
+                $tempFile,
+                $filePart
+            ));
 
             return false;
         }
-        
-        $xfTempFile = tempnam(XenForo_Helper_File::getTempDir(), 'xf');
-        XenForo_Helper_File::safeRename($file->getTempFile(), $xfTempFile);
-
-        $contents = file_get_contents($xfTempFile);
-
-        fwrite($fp, $contents);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-
-        @unlink($xfTempFile);
 
         if ($chunkNumber === $totalChunks) {
-            $session->remove($hash);
-            $session->save();
-
+            $mergedPath = $this->_doMergeParts($totalChunks, $hash, $fileExtension);
             clearstatcache();
 
-            $ourFileSize = filesize($filePart);
+            $ourFileSize = filesize($mergedPath);
             if ($ourFileSize !== $totalSize) {
-                @unlink($filePart);
+                @unlink($mergedPath);
 
                 $this->_logError(sprintf(
                     'File size mismatch. $uploadedSize=%d $expectedSize=%d',
@@ -92,7 +67,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
                 return false;
             }
 
-            $videoEditor = new Truonglv_VideoUpload_Helper_VideoEditor($filePart);
+            $videoEditor = new Truonglv_VideoUpload_Helper_VideoEditor($mergedPath);
             $newPath = $videoEditor->save();
 
             if (empty($newPath)) {
@@ -113,9 +88,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
             return $this->_uploadVideo(new XenForo_Upload($fileName, $newPath), $hash, $extra);
         }
-
-        $session->set($hash, $chunkNumber);
-        $session->save();
 
         return true;
     }
@@ -152,6 +124,38 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         }
 
         return $video;
+    }
+
+    protected function _doMergeParts($totalParts, $hash, $extension)
+    {
+        $path = sprintf('%s/tvu_video_upload/%s.%s',
+            XenForo_Helper_File::getInternalDataPath(),
+            $hash,
+            $extension
+        );
+
+        $fp = fopen($path, 'w+');
+        if (!$fp) {
+            throw new XenForo_Exception('Cannot write file.');
+        }
+
+        $beginPart = 1;
+        while ($beginPart <= $totalParts) {
+            $filePart = $path . $beginPart;
+            if (!file_exists($filePart)) {
+                break;
+            }
+
+            $contents = file_get_contents($filePart);
+            fwrite($fp, $contents);
+
+            @unlink($filePart);
+            $beginPart++;
+        }
+
+        fclose($fp);
+
+        return $path;
     }
 
     protected function _uploadVideo(XenForo_Upload $upload, $hash, array $extra)
