@@ -9,15 +9,12 @@ class Truonglv_VideoUpload_XenForo_ControllerPublic_Misc extends XFCP_Truonglv_V
         $file = XenForo_Upload::getUploadedFile('file');
         $filtered = $this->_input->filter(array(
             'resumableChunkNumber' => XenForo_Input::UINT,
-            'resumableChunkSize' => XenForo_Input::UINT,
-            'resumableCurrentChunkSize' => XenForo_Input::UINT,
             'resumableTotalSize' => XenForo_Input::UINT,
-            'resumableType' => XenForo_Input::STRING,
-            'resumableIdentifier' => XenForo_Input::STRING,
             'resumableFilename' => XenForo_Input::STRING,
             'resumableTotalChunks' => XenForo_Input::UINT,
             'hash' => XenForo_Input::STRING,
-            'content_data' => XenForo_Input::STRING
+            'content_data' => XenForo_Input::STRING,
+            'is_completed' => XenForo_Input::BOOLEAN
         ));
 
         if (!XenForo_Visitor::getInstance()->hasPermission('general', 'tvu_uploadVideos')) {
@@ -77,31 +74,45 @@ class Truonglv_VideoUpload_XenForo_ControllerPublic_Misc extends XFCP_Truonglv_V
             }
         }
 
-        $success = $videoModel->uploadChunkFile($file, $filtered);
-        if ($success === false || ($success instanceof XenForo_Phrase)) {
-            $error = ($success === false)
-                ? new XenForo_Phrase('tvu_an_error_occurred_while_process_video'):
-                $success;
+        if ($filtered['is_completed']) {
+            $attachmentId = $videoModel->uploadVideo(
+                $filtered['resumableTotalChunks'],
+                $filtered['resumableTotalSize'],
+                $filtered['hash'],
+                $filtered['resumableFilename']
+            );
 
-            return $this->responseError($error, 400);
-        }
+            if (empty($attachmentId)) {
+                return $this->responseError(
+                    new XenForo_Phrase('tvu_an_error_occurred_while_process_video')
+                );
+            }
 
-        if ($success === true) {
+            $attachment = $attachmentModel->getAttachmentById($attachmentId);
+            $message = new XenForo_Phrase('upload_completed_successfully');
+
+            $params = array(
+                'attachment' => $attachmentModel->prepareAttachment($attachment),
+                'message' => $message,
+                'hash' => $filtered['hash'],
+                'content_type' => 'post',
+                'content_data' => $contentData,
+                'key' => ''
+            );
+
+            return $this->responseView('XenForo_ViewPublic_Attachment_DoUpload', '', $params);
+        } else {
+            $success = $videoModel->uploadChunkFile($file, $filtered);
+            if ($success === false || ($success instanceof XenForo_Phrase)) {
+                $error = ($success === false)
+                    ? new XenForo_Phrase('tvu_an_error_occurred_while_process_video'):
+                    $success;
+
+                return $this->responseError($error, 400);
+            }
+
+
             return $this->responseMessage(new XenForo_Phrase('changes_saved'));
         }
-
-        $attachment = $attachmentModel->getAttachmentById($success);
-        $message = new XenForo_Phrase('upload_completed_successfully');
-
-        $params = array(
-            'attachment' => $attachmentModel->prepareAttachment($attachment),
-            'message' => $message,
-            'hash' => $filtered['hash'],
-            'content_type' => 'post',
-            'content_data' => $contentData,
-            'key' => ''
-        );
-
-        return $this->responseView('XenForo_ViewPublic_Attachment_DoUpload', '', $params);
     }
 }

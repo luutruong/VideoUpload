@@ -23,8 +23,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
         $hash = $input['hash'];
         $chunkNumber = $input['resumableChunkNumber'];
-        $totalChunks = $input['resumableTotalChunks'];
-        $totalSize = $input['resumableTotalSize'];
 
         $filePart = sprintf(
             '%s/tvu_video_upload/%s.%s%d',
@@ -49,45 +47,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             ));
 
             return false;
-        }
-
-        if ($chunkNumber === $totalChunks) {
-            $mergedPath = $this->_doMergeParts($totalChunks, $hash, $fileExtension);
-            clearstatcache();
-
-            $ourFileSize = filesize($mergedPath);
-            if ($ourFileSize !== $totalSize) {
-                @unlink($mergedPath);
-
-                $this->_logError(sprintf(
-                    'File size mismatch. $uploadedSize=%d $expectedSize=%d',
-                    $ourFileSize,
-                    $totalSize
-                ));
-
-                return false;
-            }
-
-            $videoEditor = new Truonglv_VideoUpload_Helper_VideoEditor($mergedPath);
-            $newPath = $videoEditor->save();
-
-            if (empty($newPath)) {
-                $this->_logError($videoEditor->getLastError());
-
-                return false;
-            }
-
-            $extra = array(
-                'width' => $videoEditor->getWidth(),
-                'height' => $videoEditor->getHeight()
-            );
-
-            $fileName = $file->getFileName();
-            if ($fileExtension !== $videoEditor->getExtension()) {
-                $fileName = str_replace(".{$fileExtension}", ".{$videoEditor->getExtension()}", $fileName);
-            }
-
-            return $this->_uploadVideo(new XenForo_Upload($fileName, $newPath), $hash, $extra);
         }
 
         return true;
@@ -127,6 +86,46 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         return $video;
     }
 
+    public function uploadVideo($totalChunks, $totalSize, $hash, $fileName)
+    {
+        $fileExtension = XenForo_Helper_File::getFileExtension($fileName);
+        $mergedPath = $this->_doMergeParts($totalChunks, $hash, $fileExtension);
+
+        clearstatcache();
+        $ourFileSize = filesize($mergedPath);
+        if ($ourFileSize !== $totalSize) {
+            @unlink($mergedPath);
+
+            $this->_logError(sprintf(
+                'File size mismatch. $uploadedSize=%d $expectedSize=%d',
+                $ourFileSize,
+                $totalSize
+            ));
+
+            return false;
+        }
+
+        $videoEditor = new Truonglv_VideoUpload_Helper_VideoEditor($mergedPath);
+        $newPath = $videoEditor->save();
+
+        if (empty($newPath)) {
+            $this->_logError($videoEditor->getLastError());
+
+            return false;
+        }
+
+        $extra = array(
+            'width' => $videoEditor->getWidth(),
+            'height' => $videoEditor->getHeight()
+        );
+
+        if ($fileExtension !== $videoEditor->getExtension()) {
+            $fileName = str_replace(".{$fileExtension}", ".{$videoEditor->getExtension()}", $fileName);
+        }
+
+        return $this->_doUploadVideo(new XenForo_Upload($fileName, $newPath), $hash, $extra);
+    }
+
     protected function _doMergeParts($totalParts, $hash, $extension)
     {
         $path = sprintf(
@@ -160,7 +159,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         return $path;
     }
 
-    protected function _uploadVideo(XenForo_Upload $upload, $hash, array $extra)
+    protected function _doUploadVideo(XenForo_Upload $upload, $hash, array $extra)
     {
         /** @var XenForo_Model_Attachment $attachmentModel */
         $attachmentModel = $this->getModelFromCache('XenForo_Model_Attachment');

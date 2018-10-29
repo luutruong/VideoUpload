@@ -6,7 +6,7 @@ class Truonglv_VideoUpload_FileSums
     {
         return array(
             'library/Truonglv/VideoUpload/XenForo/ControllerPublic/Thread.php' => 'c5c86ee8b326703b0fa3cb4e5f2f63d5',
-            'library/Truonglv/VideoUpload/XenForo/ControllerPublic/Misc.php' => '89962bc2f32f9da3434e474d778393e8',
+            'library/Truonglv/VideoUpload/XenForo/ControllerPublic/Misc.php' => '0c2b9cfb54cc3ae8d6ed2534f3d1bf5e',
             'library/Truonglv/VideoUpload/XenForo/AttachmentHandler/Post.php' => '434008ca69462ee046b246f0c648626c',
             'library/Truonglv/VideoUpload/XenForo/DataWriter/DiscussionMessage/Post.php' => 'dca3e4e9e5dddf2718320f77e01edc1b',
             'library/Truonglv/VideoUpload/XenForo/DataWriter/Discussion/Thread.php' => '0b541430b165a008a893c46d02955442',
@@ -15,7 +15,7 @@ class Truonglv_VideoUpload_FileSums
             'library/Truonglv/VideoUpload/Option.php' => '4caa43090a35c6e2bf4033b0be7f987c',
             'library/Truonglv/VideoUpload/Listener.php' => 'eabb90d42fe6359e229538ea93b394b6',
             'library/Truonglv/VideoUpload/CronEntry/Uploader.php' => '8733f305b6a370459b586a38339276f9',
-            'library/Truonglv/VideoUpload/Model/Video.php' => 'aad67d26008b80a42ec0a7c59869d13a',
+            'library/Truonglv/VideoUpload/Model/Video.php' => '1558a60b918dd327e0bf0010b8d3f230',
             'library/Truonglv/VideoUpload/Lib/Spaces/spaces.php' => '9d0bdbcb3cfd9ae4df52607f07f4105f',
             'library/Truonglv/VideoUpload/Lib/Spaces/aws/GuzzleHttp/functions.php' => '009912ae0c25b5a1fbe951899115b8ae',
             'library/Truonglv/VideoUpload/Lib/Spaces/aws/GuzzleHttp/Handler/EasyHandle.php' => '02eec42dd5ec3cd6ef6cca4735c2eb9b',
@@ -867,7 +867,7 @@ class Truonglv_VideoUpload_FileSums
             'library/Truonglv/VideoUpload/Callback.php' => 'fb1a7291152c845057ed0ebf7c0363e9',
             'js/Truonglv/VideoUpload/Lib/resumable.js' => 'b79c058be0085e39151787026b233140',
             'js/Truonglv/VideoUpload/Lib/video.min.js' => '689d526ad64f2ebb936bcf4b3369c368',
-            'js/Truonglv/VideoUpload/video_upload.min.js' => 'fdc1f0a0b18cc5ca884a26d2a777b4c9',
+            'js/Truonglv/VideoUpload/video_upload.min.js' => '591f57a4ad94bde060c433365b960a8b',
         );
     }
 }
