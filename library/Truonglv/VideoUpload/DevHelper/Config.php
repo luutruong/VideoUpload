@@ -31,6 +31,24 @@ class Truonglv_VideoUpload_DevHelper_Config extends DevHelper_Config_Base
                 'controller_admin' => false,
             ),
         ),
+        'video_part' => array(
+            'name' => 'video_part',
+            'camelCase' => 'VideoPart',
+            'camelCasePlural' => false,
+            'camelCaseWSpace' => 'Video Part',
+            'camelCasePluralWSpace' => false,
+            'fields' => array(
+                'path' => array('name' => 'path', 'type' => 'string', 'length' => 255, 'required' => true),
+                'upload_date' => array('name' => 'upload_date', 'type' => 'uint', 'required' => true),
+            ),
+            'phrases' => array(),
+            'title_field' => 'path',
+            'primaryKey' => false,
+            'indeces' => array(
+                'upload_date' => array('name' => 'upload_date', 'fields' => array('upload_date'), 'type' => 'NORMAL')
+            ),
+            'files' => array('data_writer' => false, 'model' => false, 'route_prefix_admin' => false, 'controller_admin' => false),
+        ),
     );
     protected $_dataPatches = array();
     protected $_exportPath = false;

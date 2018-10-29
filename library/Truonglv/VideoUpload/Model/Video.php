@@ -21,9 +21,10 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
             return new XenForo_Phrase('uploaded_file_does_not_have_an_allowed_extension');
         }
 
+        $internalPath = XenForo_Helper_File::getInternalDataPath();
         $filePart = sprintf(
             '%s/tvu_video_upload/%s.%s%d',
-            XenForo_Helper_File::getInternalDataPath(),
+            $internalPath,
             $hash,
             $fileExtension,
             $chunkNumber
@@ -45,6 +46,12 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
             return false;
         }
+
+        $db = $this->_getDb();
+        $db->insert('xf_truonglv_videoupload_video_part', array(
+            'path' => substr($filePart, strlen($internalPath) + 1),
+            'upload_date' => XenForo_Application::$time
+        ));
 
         return true;
     }

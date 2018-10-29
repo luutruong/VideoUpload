@@ -19,6 +19,15 @@ class Truonglv_VideoUpload_Installer
             ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
             'dropQuery' => 'DROP TABLE IF EXISTS `xf_truonglv_videoupload_video`',
         ),
+        'video_part' => array(
+            'createQuery' => 'CREATE TABLE IF NOT EXISTS `xf_truonglv_videoupload_video_part` (
+                `path` VARCHAR(255) NOT NULL
+                ,`upload_date` INT(10) UNSIGNED NOT NULL
+                
+                ,INDEX `upload_date` (`upload_date`)
+            ) ENGINE = InnoDB CHARACTER SET utf8 COLLATE utf8_general_ci;',
+            'dropQuery' => 'DROP TABLE IF EXISTS `xf_truonglv_videoupload_video_part`',
+        ),
     );
     protected static $_patches = array();
 
