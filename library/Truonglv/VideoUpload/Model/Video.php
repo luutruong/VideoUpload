@@ -42,7 +42,8 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $tempFile = $file->getTempFile();
 
         if (!XenForo_Helper_File::safeRename($tempFile, $filePart)) {
-            $this->_logError(sprintf('Cannot copy file. $source=%s $dest=%s',
+            $this->_logError(sprintf(
+                'Cannot copy file. $source=%s $dest=%s',
                 $tempFile,
                 $filePart
             ));
@@ -128,7 +129,8 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
     protected function _doMergeParts($totalParts, $hash, $extension)
     {
-        $path = sprintf('%s/tvu_video_upload/%s.%s',
+        $path = sprintf(
+            '%s/tvu_video_upload/%s.%s',
             XenForo_Helper_File::getInternalDataPath(),
             $hash,
             $extension
