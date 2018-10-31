@@ -3,7 +3,28 @@
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
-  <admin_templates/>
+  <admin_templates>
+    <template title="tvu_option_template_uploadPath"><![CDATA[<xen:radiounit name="{$fieldPrefix}[{$preparedOption.option_id}][type]" 
+			   label="{$preparedOption.title}" 
+			   value="{$preparedOption.option_value.type}">
+	<xen:option value="0" label="{xen:phrase tvu_upload_to_root_directory}" />
+	<xen:option value="1" label="{xen:phrase tvu_upload_with_date_time}" />
+	<xen:option value="2" label="{xen:phrase tvu_custom_location}:">
+		<xen:disabled>
+			<xen:textbox name="{$fieldPrefix}[{$preparedOption.option_id}][custom]" 
+						 value="{$preparedOption.option_value.custom}" />
+		</xen:disabled>
+	</xen:option>
+
+	<xen:html>
+		{xen:raw $editLink}
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+	</xen:html>
+	
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+</xen:radiounit>
+]]></template>
+  </admin_templates>
   <admin_template_modifications/>
   <code_events/>
   <code_event_listeners>
@@ -115,6 +136,13 @@ max=20</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="107"/>
     </option>
+    <option option_id="TVU_uploadPathTemplate" edit_format="template" data_type="array" can_backup="1">
+      <default_value>a:2:{s:4:"type";i:1;s:6:"custom";s:0:"";}</default_value>
+      <edit_format_params>tvu_option_template_uploadPath</edit_format_params>
+      <sub_options>type
+custom</sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="80"/>
+    </option>
     <option option_id="TVU_useExternalViewUrl" edit_format="radio" data_type="unsigned_integer" can_backup="1">
       <default_value>0</default_value>
       <edit_format_params>0={xen:phrase no}
@@ -170,15 +198,20 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="option_TVU_spacesRegion_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_swarmifyKey" version_id="1000400" version_string="1.0.4"><![CDATA[Swarmify Key]]></phrase>
     <phrase title="option_TVU_swarmifyKey_explain" version_id="1000400" version_string="1.0.4"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_uploadPathTemplate" version_id="1000700" version_string="1.0.7"><![CDATA[Upload path template]]></phrase>
+    <phrase title="option_TVU_uploadPathTemplate_explain" version_id="1000700" version_string="1.0.7"><![CDATA[You may use <b>{year}</b>, <b>{month}</b>, <b>{day}</b> for present current year, month and day of upload.]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl" version_id="1000000" version_string="1.0.0"><![CDATA[Use video stream url from external service]]></phrase>
     <phrase title="option_TVU_useExternalViewUrl_explain" version_id="1000000" version_string="1.0.0"><![CDATA[If checked, video will use external service (eg: Amazon,...) as possible.]]></phrase>
     <phrase title="option_TVU_videoPlayer" version_id="1000300" version_string="1.0.3"><![CDATA[Video Player]]></phrase>
     <phrase title="option_TVU_videoPlayer_explain" version_id="1000300" version_string="1.0.3"><![CDATA[]]></phrase>
     <phrase title="permission_general_tvu_uploadVideos" version_id="1000000" version_string="1.0.0"><![CDATA[[tl] Thread Video Upload: Upload Videos]]></phrase>
     <phrase title="tvu_an_error_occurred_while_process_video" version_id="1000000" version_string="1.0.0"><![CDATA[An error occurred while processing your video. Please try again.]]></phrase>
+    <phrase title="tvu_custom_location" version_id="1000700" version_string="1.0.7"><![CDATA[Custom location]]></phrase>
     <phrase title="tvu_insert_video" version_id="1000100" version_string="1.0.1"><![CDATA[Insert Video]]></phrase>
     <phrase title="tvu_stats_video_uploaded" version_id="1000400" version_string="1.0.4"><![CDATA[[tl] Thread Video Upload: Videos]]></phrase>
+    <phrase title="tvu_upload_to_root_directory" version_id="1000700" version_string="1.0.7"><![CDATA[Upload to root directory]]></phrase>
     <phrase title="tvu_upload_video" version_id="1000000" version_string="1.0.0"><![CDATA[Upload Video]]></phrase>
+    <phrase title="tvu_upload_with_date_time" version_id="1000700" version_string="1.0.7"><![CDATA[Upload with template: <b>videos/{year}/{month}/{day}/</b>]]></phrase>
     <phrase title="tvu_your_video_was_uploaded_successfully" version_id="1000000" version_string="1.0.0"><![CDATA[Your video was uploaded successfully.]]></phrase>
     <phrase title="tvu_you_may_only_upload_an_video_per_post" version_id="1000000" version_string="1.0.0"><![CDATA[You may only upload an video per post.]]></phrase>
   </phrases>

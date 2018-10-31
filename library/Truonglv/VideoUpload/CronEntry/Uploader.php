@@ -77,9 +77,10 @@ class Truonglv_VideoUpload_CronEntry_Uploader
             $attachmentRef = $attachments[$video['attachment_id']];
             $filePath = $attachmentModel->getAttachmentDataFilePath($attachmentRef);
 
+            $videoPath = self::_getVideoPath($attachmentRef);
             $success = self::doUpload(
                 $filePath,
-                $bucket . '/' . $attachmentRef['attachment_id'] . '-' . $attachmentRef['filename']
+                $bucket . '/' . $videoPath
             );
 
             if ($success) {
@@ -87,7 +88,7 @@ class Truonglv_VideoUpload_CronEntry_Uploader
                     'https://%s.%s.digitaloceanspaces.com/%s',
                     $bucket,
                     $region,
-                    $attachmentRef['attachment_id'] . '-' . $attachmentRef['filename']
+                    $videoPath
                 );
 
                 $dw->set('remote_url', $remoteUrl);
@@ -97,6 +98,29 @@ class Truonglv_VideoUpload_CronEntry_Uploader
         }
 
         self::$_s3 = null;
+    }
+
+    protected static function _getVideoPath(array $attachment)
+    {
+        $templateOp = Truonglv_VideoUpload_Option::get('uploadPathTemplate');
+        $prefix = '';
+
+        if ($templateOp['type'] == 1) {
+            $prefix = 'videos/{year}/{month}/{day}';
+        } elseif ($templateOp['type'] == 2) {
+            $prefix = $templateOp['custom'];
+        }
+
+        $now = XenForo_Application::$time;
+
+        $prefix = strtr($prefix, array(
+            '{year}' => date('Y', $now),
+            '{month}' => date('m', $now),
+            '{day}' => date('d', $now)
+        ));
+
+        $prefix = rtrim($prefix, '/') . '/' . $attachment['attachment_id'] . '-' . $attachment['filename'];
+        return ltrim($prefix, '/');
     }
 
     protected static function _cleanVideoParts()
