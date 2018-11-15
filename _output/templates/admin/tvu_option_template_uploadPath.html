@@ -1,0 +1,13 @@
+<xf:formrow rowtype="input"
+            label="{$option.title}"
+            hint="{$hintHtml}"
+            explain="{$explainHtml}"
+            html="{$listedHtml}">
+    <xf:radio name="{$inputName}[type]" value="{$option.option_value.type}">
+        <xf:option value="0">{{ phrase('tvu_upload_to_root_directory') }}</xf:option>
+        <xf:option value="1">{{ phrase('tvu_upload_with_date_time') }}</xf:option>
+        <xf:option value="2" label="{{ phrase('tvu_custom_location') }}">
+            <xf:textbox name="{$inputName}[custom]" value="{$option.option_value.custom}" />
+        </xf:option>
+    </xf:radio>
+</xf:formrow>

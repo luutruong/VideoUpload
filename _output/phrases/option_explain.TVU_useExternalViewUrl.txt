@@ -1,0 +1,1 @@
+If checked, video will use external service (eg: Amazon,...) when it's possible.

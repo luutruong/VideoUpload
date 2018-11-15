@@ -1,0 +1,236 @@
+{
+    "option.TVU_allowGuestViewVideos.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "f87f5f1c8785ffc470a9c2a7623efbf5"
+    },
+    "option.TVU_allowedVideoExtensions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "07059455d07932ca97a1d74df42172c9"
+    },
+    "option.TVU_autoConvertMp4.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "b051a681f1c4e7c2ed9193cffd543e99"
+    },
+    "option.TVU_baseUrl.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d6062be9ae745794f820bceab8746609"
+    },
+    "option.TVU_chunkSize.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "949a088f49bb32e707696a340cf4126a"
+    },
+    "option.TVU_ffmpeg.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "39351e1cda6ca0d5459232db09ca0e6e"
+    },
+    "option.TVU_maxUploadPerProcess.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "249e37de96176f089ccec666ec68b4db"
+    },
+    "option.TVU_maxVideoDuration.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "baca799a1a949f4d5d5922cc990673dd"
+    },
+    "option.TVU_simultaneousUploads.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d17ac0b32793bf66bba7d171451694b7"
+    },
+    "option.TVU_spacesApiKey.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "c126c0c347bf92db0359cd1598bb13b1"
+    },
+    "option.TVU_spacesApiSecret.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "fd5ccc9a0cc586e5d67031568a5439c9"
+    },
+    "option.TVU_spacesBucket.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "3cfb1ee9de4b1e849ff3d138d43a1829"
+    },
+    "option.TVU_spacesRegion.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "8276bbd7e9446ffb8c06f5f2449f8afe"
+    },
+    "option.TVU_swarmifyKey.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "07d449cf2ad18b5093714f91a4d44c17"
+    },
+    "option.TVU_uploadPathTemplate.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "412e7a565ff5fd0d1737cabccf36e658"
+    },
+    "option.TVU_useExternalViewUrl.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "f7d207a7dcc96fd05a9e1ac23bd1ea5a"
+    },
+    "option.TVU_videoPlayer.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "ab3731784519a70096f7d4f6f92ab734"
+    },
+    "option_explain.TVU_allowGuestViewVideos.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_allowedVideoExtensions.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "290bcef9f1ee9dfb447c536d31d515c4"
+    },
+    "option_explain.TVU_autoConvertMp4.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_baseUrl.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_chunkSize.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_ffmpeg.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "263c397ec2f2231ff589500f6d576317"
+    },
+    "option_explain.TVU_maxUploadPerProcess.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "ced059677f53d2172c4c8c12814078cb"
+    },
+    "option_explain.TVU_maxVideoDuration.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "73ce38e5be2762f7bc863d920ada5316"
+    },
+    "option_explain.TVU_simultaneousUploads.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_spacesApiKey.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_spacesApiSecret.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_spacesBucket.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_spacesRegion.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_swarmifyKey.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_explain.TVU_uploadPathTemplate.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "85b4f7a284770dfa070c239f73fa7c94"
+    },
+    "option_explain.TVU_useExternalViewUrl.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "5f2db94b6df2cd112fd9026b9c1748d2"
+    },
+    "option_explain.TVU_videoPlayer.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "option_group.Truonglv_VideoUpload.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "a97fc3773411a36f6828f57528666641"
+    },
+    "option_group_description.Truonglv_VideoUpload.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "tvu_custom_location.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "cccd5aa02b37680af6a572a611d93bab"
+    },
+    "tvu_upload_to_root_directory.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "18c8f5612625be3eaba76cc4e5aaabcc"
+    },
+    "tvu_upload_with_date_time.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "c3f7dbb1cf191d26c4617a63061e603f"
+    }
+}

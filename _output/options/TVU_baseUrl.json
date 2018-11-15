@@ -1,0 +1,12 @@
+{
+    "edit_format": "radio",
+    "edit_format_params": "cdn.digitaloceanspaces.com=cdn.digitaloceanspaces.com\ndigitaloceanspaces.com=digitaloceanspaces.com",
+    "data_type": "string",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "cdn.digitaloceanspaces.com",
+    "relations": {
+        "Truonglv_VideoUpload": 100
+    }
+}

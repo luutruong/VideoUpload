@@ -1,0 +1,15 @@
+{
+    "edit_format": "template",
+    "edit_format_params": "tvu_option_template_uploadPath",
+    "data_type": "array",
+    "sub_options": [
+        "type",
+        "custom"
+    ],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "{\"type\":1,\"custom\":\"\"}",
+    "relations": {
+        "Truonglv_VideoUpload": 220
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "edit_format": "radio",
+    "edit_format_params": "native=HTML5 Native Player\nvideojs=Video.js Player\nsmartvideo=Smart Video Player (Swarmify)",
+    "data_type": "string",
+    "sub_options": [],
+    "validation_class": "",
+    "validation_method": "",
+    "default_value": "videojs",
+    "relations": {
+        "Truonglv_VideoUpload": 420
+    }
+}

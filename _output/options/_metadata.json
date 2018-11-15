@@ -1,0 +1,53 @@
+{
+    "TVU_allowGuestViewVideos.json": {
+        "hash": "fd2e2020bed238472d3f8fead7ca7174"
+    },
+    "TVU_allowedVideoExtensions.json": {
+        "hash": "e0ae66848467b702164a5276aa5f7758"
+    },
+    "TVU_autoConvertMp4.json": {
+        "hash": "e40f74bc63e6f416e17807fe0bd5421f"
+    },
+    "TVU_baseUrl.json": {
+        "hash": "3b51b28b53c63ea29a58db0087705c1c"
+    },
+    "TVU_chunkSize.json": {
+        "hash": "375c11b4ac165f63d2e0bd3e0ca4901c"
+    },
+    "TVU_ffmpeg.json": {
+        "hash": "111b964d4a82f1f42dbe7fc38bf6e038"
+    },
+    "TVU_maxUploadPerProcess.json": {
+        "hash": "d65163bcd4ba83860fac627324e8730f"
+    },
+    "TVU_maxVideoDuration.json": {
+        "hash": "ee26e8d4bc0ca16c03211c070167ebaa"
+    },
+    "TVU_simultaneousUploads.json": {
+        "hash": "e61c0f391c8fd79c13c28e62cea6ebcb"
+    },
+    "TVU_spacesApiKey.json": {
+        "hash": "6a085a635f81806126d0b7d8add0138b"
+    },
+    "TVU_spacesApiSecret.json": {
+        "hash": "ada2b9df2ae3ba823a2018a5f610f5c3"
+    },
+    "TVU_spacesBucket.json": {
+        "hash": "2f5ec247e4cbe6cc45603df98a7f09a0"
+    },
+    "TVU_spacesRegion.json": {
+        "hash": "bd8f9fb2c0d32fa825fe50739d4aaba5"
+    },
+    "TVU_swarmifyKey.json": {
+        "hash": "164e8ab5bdb37691964655868544ca75"
+    },
+    "TVU_uploadPathTemplate.json": {
+        "hash": "114b8954cb9c66da8c02142b3044942c"
+    },
+    "TVU_useExternalViewUrl.json": {
+        "hash": "200ca18a42c9204ee98a614e2a2c0925"
+    },
+    "TVU_videoPlayer.json": {
+        "hash": "d8c3deb29f161e1c8cd233e72bef62ae"
+    }
+}

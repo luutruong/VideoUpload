@@ -1,0 +1,1 @@
+If the given video has duration over this value, the video will but cut off to this value. Set to 0 to unlimited.

@@ -1,0 +1,9 @@
+{
+    "template": "quick_reply_macros",
+    "description": "Insert upload video button",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"$xf.options.multiQuote && $multiQuoteHref\">",
+    "replace": "<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderUploadVideoButton\"\n\t\t\t params=\"{'attachmentData': $attachmentData}\" />\n$0"
+}
