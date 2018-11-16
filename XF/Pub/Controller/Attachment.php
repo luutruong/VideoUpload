@@ -3,6 +3,7 @@
 namespace Truonglv\VideoUpload\XF\Pub\Controller;
 
 use Truonglv\VideoUpload\Service\Video\Chunk;
+use Truonglv\VideoUpload\Service\Video\Uploader;
 
 class Attachment extends XFCP_Attachment
 {
@@ -12,13 +13,14 @@ class Attachment extends XFCP_Attachment
 
         $filtered = $this->filter([
             'flowChunkNumber' => 'uint',
-            'flowChunkSize' => 'uint',
+            'flowCurrentChunkSize' => 'uint',
             'flowTotalSize' => 'uint',
             'flowTotalChunks' => 'uint',
             'flowFilename' => 'str',
 
             'attachmentHash' => 'str',
-            'contextData' => 'str'
+            'contextData' => 'str',
+            'isCompleted' => 'bool'
         ]);
 
         $contextData = json_decode($filtered['contextData'], true);
@@ -40,26 +42,62 @@ class Attachment extends XFCP_Attachment
             return $this->noPermission($error);
         }
 
-        $file = $this->request()->getFile('file');
-        if (!$file) {
-            return $this->noPermission();
+        if (!empty($filtered['isCompleted'])) {
+            /** @var Uploader $uploader */
+            $uploader = $this->service('Truonglv\VideoUpload:Video\Uploader');
+            $uploader
+                ->setAttachmentHash($filtered['attachmentHash'])
+                ->setFileName($filtered['flowFilename'])
+                ->setTotalChunks($filtered['flowTotalChunks'])
+                ->setTotalSize($filtered['flowTotalSize']);
+
+            $attachment = $uploader->upload($handler);
+
+            if (!$attachment) {
+                return $this->error(\XF::phrase('tvu_an_error_occurred_while_process_video'), 400);
+            }
+
+            $json['attachment'] = [
+                'attachment_id' => $attachment->attachment_id,
+                'filename' => $attachment->filename,
+                'file_size' => $attachment->file_size,
+                'thumbnail_url' => $attachment->thumbnail_url,
+                'link' => $this->buildLink('attachments', $attachment, ['hash' => $attachment->temp_hash])
+            ];
+            $json['link'] = $json['attachment']['link'];
+
+            $json = $handler->prepareAttachmentJson($attachment, $contextData, $json);
+
+            $reply = $this->redirect($this->buildLink('attachments/upload', null, [
+                'type' => 'post',
+                'context' => $contextData,
+                'hash' => $filtered['attachmentHash']
+            ]));
+            $reply->setJsonParams($json);
+
+            return $reply;
+        } else {
+            $file = $this->request()->getFile('file');
+            if (!$file) {
+                return $this->noPermission();
+            }
+
+            /** @var Chunk $chunk */
+            $chunk = $this->service('Truonglv\VideoUpload:Video\Chunk', $file);
+            $chunk
+                ->setAttachmentHash($filtered['attachmentHash'])
+                ->setChunkNumber($filtered['flowChunkNumber'])
+                ->setChunkSize($filtered['flowCurrentChunkSize'])
+                ->setFileName($filtered['flowFilename']);
+
+            if (!$chunk->upload()) {
+                return $this->error(
+                    $chunk->getLastError() ?: \XF::phrase('tvu_an_error_occurred_while_process_video'),
+                    400
+                );
+            }
+
+            return $this->message(\XF::phrase('ok'));
         }
-
-        /** @var Chunk $chunk */
-        $chunk = $this->service('Truonglv\VideoUpload:Video\Chunk', $file);
-        $chunk
-            ->setAttachmentHash($filtered['attachmentHash'])
-            ->setChunkNumber($filtered['flowChunkNumber'])
-            ->setChunkSize($filtered['flowChunkSize'])
-            ->setFileName($filtered['flowFilename']);
-
-        if (!$chunk->upload()) {
-            return $this->error(
-                $chunk->getLastError() ?: \XF::phrase('tvu_an_error_occurred_while_process_video'),
-                400
-            );
-        }
-
-        return $this->message(\XF::phrase('ok'));
     }
 }

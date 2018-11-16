@@ -3,6 +3,7 @@
  * @license
  * Copyright 2018 TruongLuu. All Rights Reserved.
  */
+
 namespace Truonglv\VideoUpload\Entity;
 
 use XF\Mvc\Entity\Entity;

@@ -3,11 +3,14 @@
  * @license
  * Copyright 2018 TruongLuu. All Rights Reserved.
  */
+
 namespace Truonglv\VideoUpload\Service\Video;
 
+use XF\Util\File;
 use XF\Http\Upload;
 use XF\Service\AbstractService;
-use XF\Util\File;
+use Truonglv\VideoUpload\Callback;
+use Truonglv\VideoUpload\Repository\Video;
 
 class Chunk extends AbstractService
 {
@@ -74,7 +77,7 @@ class Chunk extends AbstractService
         $file = $this->file;
         $options = $this->app->options();
 
-        $maxSize = $options->TVU_chunkSize * 1024;
+        $maxSize = Callback::getChunkSize();
         $allowedExtensions = $options->TVU_allowedVideoExtensions;
 
         $this->lastError = null;
@@ -89,6 +92,7 @@ class Chunk extends AbstractService
         $file->setAllowedExtensions($allowedExtensions);
         $file->setMaxFileSize($maxSize);
 
+        $errors = null;
         if (!$file->isValid($errors)) {
             $this->lastError = reset($errors);
 
@@ -97,14 +101,16 @@ class Chunk extends AbstractService
 
         $baseFile = $file->getTempFile();
 
+        /** @var Video $videoRepo */
+        $videoRepo = $this->repository('Truonglv\VideoUpload:Video');
+
         $internalDataPath = $this->app->config('internalDataPath');
 
-        $chunkPath = $this->getChunkPath($file->getExtension(), $internalDataPath);
-        $chunkDir = dirname($chunkPath);
+        $chunkPath = $videoRepo->getChunkPath($this->attachmentHash, $file->getExtension(), $this->chunkNumber);
 
         $uploadedSize = $file->getFileSize();
         if ($uploadedSize !== $this->chunkSize) {
-            $this->logError(sprintf(
+            $videoRepo->logError(sprintf(
                 'Chunk size mismatched. $uploadSize=%d $requestSize=%d',
                 $uploadedSize,
                 $this->chunkSize
@@ -113,14 +119,8 @@ class Chunk extends AbstractService
             return false;
         }
 
-        if (!is_dir($chunkDir)) {
-            if (!File::createDirectory($chunkDir)) {
-                throw new \InvalidArgumentException('Cannot create directory (' . $chunkDir . ')');
-            }
-        }
-        
-        if (!File::copyFile($baseFile, $chunkPath)) {
-            $this->logError(sprintf(
+        if (!File::copyFileToAbstractedPath($baseFile, $chunkPath)) {
+            $videoRepo->logError(sprintf(
                 'Cannot copy file. $source=%s $dest=%s',
                 $baseFile,
                 $chunkPath
@@ -135,23 +135,6 @@ class Chunk extends AbstractService
         ]);
 
         return true;
-    }
-
-    protected function getChunkPath($extension, $internalDataPath = null)
-    {
-        $config = $this->app->config();
-
-        return sprintf('%s/tvu_video_upload/%s.%s.%d',
-            $internalDataPath ?: $config['internalDataPath'],
-            $this->attachmentHash,
-            $extension,
-            $this->chunkNumber
-        );
-    }
-
-    protected function logError($message)
-    {
-        \XF::logError("[tl] Thread Video Upload: {$message}");
     }
 
     private function ensureAllOptionsWasSet()

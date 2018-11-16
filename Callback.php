@@ -3,6 +3,7 @@
  * @license
  * Copyright 2018 TruongLuu. All Rights Reserved.
  */
+
 namespace Truonglv\VideoUpload;
 
 use XF\Template\Templater;
@@ -32,7 +33,7 @@ class Callback
             'data-attachment-hash' => $attachmentData['hash'],
             'data-context-data' => $contextData,
             'data-upload-url' => $router->buildLink('attachments/tvu-video-upload'),
-            'data-chunk-size' => $options->TVU_chunkSize * 1024,
+            'data-chunk-size' => self::getChunkSize(),
             'data-simultaneous-uploads' => $options->TVU_simultaneousUploads,
             'data-accept' => $options->TVU_allowedVideoExtensions
         ];
@@ -44,5 +45,12 @@ class Callback
         ]);
 
         return $templater->button(\XF::phrase('tvu_upload_video'), $options);
+    }
+
+    public static function getChunkSize()
+    {
+        $options = \XF::app()->options();
+
+        return min($options->TVU_chunkSize, $options->attachmentMaxFileSize) * 1024;
     }
 }
