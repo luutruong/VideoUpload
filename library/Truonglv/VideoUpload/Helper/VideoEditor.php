@@ -13,7 +13,7 @@ class Truonglv_VideoUpload_Helper_VideoEditor
     private $_width = 0;
     private $_height = 0;
 
-    private $_lastError = null;
+    private $_videoModel = null;
 
     public function __construct($path)
     {
@@ -38,14 +38,6 @@ class Truonglv_VideoUpload_Helper_VideoEditor
     public function getHeight()
     {
         return $this->_height;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getLastError()
-    {
-        return $this->_lastError;
     }
 
     /**
@@ -99,7 +91,7 @@ class Truonglv_VideoUpload_Helper_VideoEditor
             . ' -hide_banner 2>&1';
         exec($command, $commandOutput);
 
-        $newFileSize = filesize($output);
+        $newFileSize = @filesize($output);
         if ($newFileSize < 1) {
             // failed to convert video.
             $this->_logError(sprintf(
@@ -115,6 +107,28 @@ class Truonglv_VideoUpload_Helper_VideoEditor
 
         unlink($path);
         return $output;
+    }
+
+    protected function _getMaxDuration($maxDuration)
+    {
+        $hours = floor($maxDuration / 3600);
+        $maxDuration -= $hours * 3600;
+
+        $minutes = floor($maxDuration / 60);
+
+        $seconds = $maxDuration - $minutes * 60;
+
+        if ($seconds > 60) {
+            $minutes += 1;
+            $seconds = $seconds - 60;
+        }
+
+        if ($minutes > 60) {
+            $hours += 1;
+            $minutes = $minutes - 60;
+        }
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
     }
 
     protected function _doCropVideoDuration()
@@ -162,7 +176,7 @@ class Truonglv_VideoUpload_Helper_VideoEditor
 
         $command = $ffmpeg . ' -i ' . escapeshellarg($this->_path)
             . ' -ss 00:00:00 '
-            . ' -t 00:01:00 '
+            . ' -t ' . escapeshellarg($this->_getMaxDuration($maxDuration))
             . ' -c copy '
             . ' ' . escapeshellarg($outputFile)
             . ' 2>&1';
@@ -208,6 +222,19 @@ class Truonglv_VideoUpload_Helper_VideoEditor
 
     protected function _logError($message)
     {
-        $this->_lastError = $message;
+        $this->_getVideoModel()->logError($message);
+    }
+
+    /**
+     * @return Truonglv_VideoUpload_Model_Video
+     * @throws XenForo_Exception
+     */
+    protected function _getVideoModel()
+    {
+        if ($this->_videoModel === null) {
+            $this->_videoModel = XenForo_Model::create('Truonglv_VideoUpload_Model_Video');
+        }
+
+        return $this->_videoModel;
     }
 }

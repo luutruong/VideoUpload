@@ -38,7 +38,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $tempFile = $file->getTempFile();
 
         if (!XenForo_Helper_File::safeRename($tempFile, $filePart)) {
-            $this->_logError(sprintf(
+            $this->logError(sprintf(
                 'Cannot copy file. $source=%s $dest=%s',
                 $tempFile,
                 $filePart
@@ -95,7 +95,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $fileExtension = XenForo_Helper_File::getFileExtension($fileName);
         $mergedPath = $this->_doMergeParts($totalChunks, $hash, $fileExtension);
 
-        if (!file_exists($mergedPath)) {
+        if ($mergedPath === false) {
             return false;
         }
 
@@ -104,7 +104,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         if ($ourFileSize !== $totalSize) {
             @unlink($mergedPath);
 
-            $this->_logError(sprintf(
+            $this->logError(sprintf(
                 'File size mismatch. $uploadedSize=%d $expectedSize=%d',
                 $ourFileSize,
                 $totalSize
@@ -117,8 +117,6 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         $newPath = $videoEditor->save();
 
         if (empty($newPath)) {
-            $this->_logError($videoEditor->getLastError());
-
             return false;
         }
 
@@ -152,7 +150,11 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         while ($beginPart <= $totalParts) {
             $filePart = $path . $beginPart;
             if (!file_exists($filePart)) {
-                break;
+                fclose($fp);
+
+                @unlink($path);
+
+                return false;
             }
 
             $contents = file_get_contents($filePart);
@@ -196,7 +198,7 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
         return $attachmentId;
     }
 
-    protected function _logError($message)
+    public function logError($message)
     {
         $e = new Exception('[tl] Thread Video Upload: ' . $message);
         XenForo_Error::logException($e, false);
