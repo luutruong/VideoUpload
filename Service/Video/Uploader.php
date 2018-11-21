@@ -12,6 +12,7 @@ use XF\Service\AbstractService;
 use Truonglv\VideoUpload\Callback;
 use XF\Attachment\AbstractHandler;
 use XF\Service\Attachment\Preparer;
+use Truonglv\VideoUpload\Utils\Writer;
 use Truonglv\VideoUpload\Repository\Video;
 
 class Uploader extends AbstractService
@@ -127,30 +128,21 @@ class Uploader extends AbstractService
         $videoTemp = File::getTempFile();
         $extension = File::getFileExtension($this->fileName);
 
-        $fp = fopen($videoTemp, 'w+');
-        if (!$fp) {
-            throw new \InvalidArgumentException('Cannot read & write file: ' . $videoTemp);
-        }
+        $writer = new Writer($videoTemp);
 
         while ($currentChunk <= $this->totalChunks) {
             $filePart = $this->getVideoRepo()->getChunkPath($this->attachmentHash, $extension, $currentChunk);
             if (!$filePart) {
                 $this->getVideoRepo()->logError(sprintf('Missing video file part: %s', $filePart));
 
-                fclose($fp);
-
                 return false;
             }
 
             $tempFile = File::copyAbstractedPathToTempFile($filePart);
-            $contents = file_get_contents($tempFile);
-
-            unlink($tempFile);
             File::deleteFromAbstractedPath($filePart);
 
-            if (!$contents) {
-                fclose($fp);
-
+            $appended = $writer->appendFrom($tempFile);
+            if (!$appended) {
                 $this->getVideoRepo()
                     ->logError(sprintf(
                         'Failed to read video part data. $path=%s',
@@ -160,12 +152,10 @@ class Uploader extends AbstractService
                 return false;
             }
 
-            fwrite($fp, $contents);
-
             $currentChunk++;
         }
 
-        fclose($fp);
+        $writer->close();
 
         return $videoTemp;
     }
