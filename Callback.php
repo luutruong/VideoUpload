@@ -47,7 +47,7 @@ class Callback
 
         /** @var Video $videoData */
         $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
-        $videos = $videoData->getVideos($thread->thread_id);
+        $videos = $videoData->getVideos();
         if ($videos === null || !$videos->count()) {
             return $templater->renderMacro('message_macros', 'attachments', [
                 'attachments' => $post->Attachments,
