@@ -1,0 +1,9 @@
+{
+    "template": "helper_attach_upload",
+    "description": "Insert button \"Insert video\"",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#(<span>{{ phrase\\('insert:'\\) }}</span>)(.+?)(<span class=\"buttonGroup buttonGroup--aligned\"[^>]*>).+?(</span>)#s",
+    "replace": "<xf:if is=\"$attachment && $attachment.hasTVUVideo()\">\n\t$1\n\t$2\n\t$3\n\t<xf:button class=\"button--small js-attachmentAction\" \n\t\t\t   data-action=\"tvu_video\">\n\t\t{{ phrase('tvu_insert_video') }}\n\t</xf:button>\n\t$4\n<xf:else />\n\t$0\n</xf:if>"
+}

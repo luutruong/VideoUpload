@@ -221,11 +221,29 @@
         "version_string": "2.0.0",
         "hash": "d41d8cd98f00b204e9800998ecf8427e"
     },
+    "permission.general_tvu_uploadVideos.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "1e96d5d1c5aa0389bc905e84836a8f9e"
+    },
     "tvu_custom_location.txt": {
         "global_cache": false,
         "version_id": 2000000,
         "version_string": "2.0.0",
         "hash": "cccd5aa02b37680af6a572a611d93bab"
+    },
+    "tvu_insert_video.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "4b8156552accbe79b65549d3a9c235b5"
+    },
+    "tvu_stats_videos_uploaded.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "8ba6c8f6c512fb4e13ac9b9623687b48"
     },
     "tvu_upload_to_root_directory.txt": {
         "global_cache": false,
@@ -244,5 +262,11 @@
         "version_id": 2000000,
         "version_string": "2.0.0",
         "hash": "c3f7dbb1cf191d26c4617a63061e603f"
+    },
+    "tvu_you_may_only_upload_an_video_per_post.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "e0ca5c13e993f7b257abf2ec9c51ccff"
     }
 }

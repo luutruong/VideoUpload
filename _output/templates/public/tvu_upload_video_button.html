@@ -1,0 +1,14 @@
+<xf:js src="Truonglv/VideoUpload/video_upload.js"
+       min="1"
+       addon="Truonglv/VideoUpload"/>
+<xf:css src="tvu_upload_video.less" />
+
+<xf:button class="button--link js-tvuVideoUpload"
+           icon="video"
+           data-xf-init="tvu-video-upload"
+           data-attachment-hash="{$attachmentData.hash}"
+           data-context-data="{$attachmentData.context|json}"
+           data-upload-url="{{ link('attachments/tvu-video-upload') }}"
+           data-chunk-size="{$chunkSize}"
+           data-simultaneous-uploads="{$xf.options->TVU_simultaneousUploads}"
+           data-accept="{$xf.options->TVU_allowedVideoExtensions}">{{ phrase('tvu_upload_video') }}</xf:button>

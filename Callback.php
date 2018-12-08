@@ -21,34 +21,17 @@ class Callback
         }
 
         $attachmentData = $params['attachmentData'];
-        if (empty($attachmentData['type']) || $attachmentData['type'] !== 'post') {
+        if (empty($attachmentData['type'])
+            || $attachmentData['type'] !== 'post'
+            || !\XF::visitor()->hasPermission('general', 'tvu_uploadVideos')
+        ) {
             return null;
         }
 
-        $contextData = $templater->filter($attachmentData['context'], [['json']], false);
-
-        $router = \XF::app()->router('public');
-        $options = \XF::app()->options();
-
-        $options = [
-            'icon' => 'video',
-            'class' => 'button--link js-tvuVideoUpload',
-            'data-xf-init' => 'tvu-video-upload',
-            'data-attachment-hash' => $attachmentData['hash'],
-            'data-context-data' => $contextData,
-            'data-upload-url' => $router->buildLink('attachments/tvu-video-upload'),
-            'data-chunk-size' => self::getChunkSize(),
-            'data-simultaneous-uploads' => $options->TVU_simultaneousUploads,
-            'data-accept' => $options->TVU_allowedVideoExtensions
-        ];
-
-        $templater->includeJs([
-            'src' => 'Truonglv/VideoUpload/video_upload.js',
-            'addon' => 'Truonglv/VideoUpload',
-            'min' => true
+        return $templater->renderTemplate('public:tvu_upload_video_button', [
+            'attachmentData' => $attachmentData,
+            'chunkSize' => self::getChunkSize()
         ]);
-
-        return $templater->button(\XF::phrase('tvu_upload_video'), $options);
     }
 
     public static function renderPostAttachments($_, array $params, Templater $templater)
@@ -78,7 +61,9 @@ class Callback
         $html = '';
 
         foreach ($attachments as $index => $attachment) {
-            if (isset($videosGrouped[$attachment->attachment_id])) {
+            if (isset($videosGrouped[$attachment->attachment_id])
+                && !$post->isAttachmentEmbedded($attachment->attachment_id)
+            ) {
                 unset($attachments[$index]);
 
                 /** @var \Truonglv\VideoUpload\Entity\Video $videoRef */
@@ -96,6 +81,31 @@ class Callback
         }
 
         return $html;
+    }
+
+    public static function renderBbCodeTagAttach($_, array $params, Templater $templater)
+    {
+        /** @var Attachment $attachment */
+        $attachment = $params['attachment'];
+
+        /** @var Video $videoData */
+        $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
+        $videos = $videoData->getVideos();
+
+        if (!$videos) {
+            $viewLink = \XF::app()->router('public')
+                ->buildLink('full:attachments', $attachment);
+            $viewPhrase = \XF::phrase('view_attachment_x', [
+                'name' => $attachment->attachment_id
+            ]);
+
+            return '<a href="' . $templater->escape($viewLink) . '" target="_blank">' . $viewPhrase . '</a>';
+        }
+
+        $videos = $videos->groupBy('attachment_id');
+        $video = reset($videos[$attachment->attachment_id]);
+
+        return self::renderVideoHtml($video, $attachment, $templater);
     }
 
     public static function getChunkSize()

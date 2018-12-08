@@ -2,6 +2,7 @@
 
 namespace Truonglv\VideoUpload\XF\Pub\Controller;
 
+use Truonglv\VideoUpload\Utils\File;
 use Truonglv\VideoUpload\Service\Video\Chunk;
 use Truonglv\VideoUpload\Service\Video\Uploader;
 
@@ -27,6 +28,13 @@ class Attachment extends XFCP_Attachment
 
         if (empty($contextData)
             || empty($filtered['attachmentHash'])
+            || !\XF::visitor()->hasPermission('general', 'tvu_uploadVideos')
+        ) {
+            return $this->noPermission();
+        }
+
+        if (empty($filtered['flowFilename'])
+            || !File::isValidVideo($filtered['flowFilename'])
         ) {
             return $this->noPermission();
         }
@@ -40,6 +48,19 @@ class Attachment extends XFCP_Attachment
 
         if (!$handler->canManageAttachments($contextData, $error)) {
             return $this->noPermission($error);
+        }
+
+        // Do not allow multiple videos per post
+        $attachmentIds = $this->finder('XF:Attachment')
+            ->where('temp_hash', $filtered['attachmentHash'])
+            ->fetchColumns('attachment_id');
+        if ($attachmentIds) {
+            $videoTotal = $this->finder('Truonglv\VideoUpload:Video')
+                ->where('attachment_id', array_column($attachmentIds, 'attachment_id'))
+                ->total();
+            if ($videoTotal > 0) {
+                return $this->error(\XF::phrase('tvu_you_may_only_upload_an_video_per_post'), 400);
+            }
         }
 
         if (!empty($filtered['isCompleted'])) {
@@ -61,8 +82,9 @@ class Attachment extends XFCP_Attachment
                 'attachment_id' => $attachment->attachment_id,
                 'filename' => $attachment->filename,
                 'file_size' => $attachment->file_size,
-                'thumbnail_url' => $attachment->thumbnail_url,
-                'link' => $this->buildLink('attachments', $attachment, ['hash' => $attachment->temp_hash])
+                'thumbnail_url' => null,
+                'link' => $this->buildLink('attachments', $attachment, ['hash' => $attachment->temp_hash]),
+                'is_tvu_video' => true
             ];
             $json['link'] = $json['attachment']['link'];
 

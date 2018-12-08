@@ -1,0 +1,9 @@
+{
+    "template": "helper_attach_upload",
+    "description": "Add extra conditions",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "$attachment.has_thumbnail AND !$noJsFallback",
+    "replace": "($0) OR $attachment.hasTVUVideo()"
+}

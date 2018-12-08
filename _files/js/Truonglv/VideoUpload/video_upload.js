@@ -28,6 +28,10 @@
             }
             this.attachmentManager = attachmentManager;
 
+            this.attachmentManager
+                .$filesContainer
+                .on('click', this.attachmentManager.options.actionButton, XF.proxy(this, 'actionButtonClick'));
+
             var flow = this.setupFlow();
             if (!flow) {
                 console.error('No flow uploader support');
@@ -38,6 +42,24 @@
             this.setupUploadButton(flow);
 
             this.disableUploadButton(false);
+        },
+
+        actionButtonClick: function(e) {
+            e.preventDefault();
+
+            var $target = $(e.currentTarget),
+                action = $target.attr('data-action'),
+                attachmentManager = this.attachmentManager,
+                $row = $target.closest(attachmentManager.options.fileRow);
+            if (action === 'tvu_video') {
+                var bbCodeAttach = '[ATTACH=video]' + $row.data('attachment-id') + '[/ATTACH]';
+                XF.insertIntoEditor(
+                    attachmentManager.$target,
+                    '<div>' + bbCodeAttach + '</div>',
+                    bbCodeAttach,
+                    '[data-attachment-target=false]'
+                );
+            }
         },
 
         disableUploadButton: function(disabled) {

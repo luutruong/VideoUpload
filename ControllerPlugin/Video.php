@@ -8,6 +8,7 @@ namespace Truonglv\VideoUpload\ControllerPlugin;
 
 use XF\Entity\Post;
 use XF\Entity\Thread;
+use Truonglv\VideoUpload\Utils\File;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\ControllerPlugin\AbstractPlugin;
 
@@ -21,19 +22,13 @@ class Video extends AbstractPlugin
     {
         $attachmentIds = [];
 
-        $allowVideoExts = $this->options()->TVU_allowedVideoExtensions;
-        $allowVideoExts = preg_split('/\s*,\s*/', $allowVideoExts, -1, PREG_SPLIT_NO_EMPTY);
-        if (!is_array($allowVideoExts)) {
-            $allowVideoExts = [];
-        }
-
         /** @var Post $post */
         foreach ($posts as $post) {
             $attachments = $post->Attachments;
             foreach ($attachments as $index => $attachment) {
                 if ($attachment->Data->width > 0
                     && $attachment->Data->height > 0
-                    && in_array($attachment->getExtension(), $allowVideoExts, true)
+                    && File::isValidVideo($attachment->filename)
                 ) {
                     $attachmentIds[] = $attachment->attachment_id;
                 }
@@ -49,7 +44,7 @@ class Video extends AbstractPlugin
 
             /** @var \Truonglv\VideoUpload\Data\Video $videoData */
             $videoData = $this->data('Truonglv\VideoUpload:Video');
-            $videoData->addVideos($thread->thread_id, $videos);
+            $videoData->addVideos($videos);
         }
     }
 }

@@ -2,8 +2,20 @@
     "public/TVU_QRM_insertUploadButton.json": {
         "hash": "ce4b9a19612e85f150f9f5457fcc4f6c"
     },
+    "public/TVU_bb_code_tag_attach.json": {
+        "hash": "02e8a03a03e1c5b01dfcce90c05ee288"
+    },
     "public/TVU_helper_attach_upload.json": {
         "hash": "8335466d60fd78286a333295e70c76c8"
+    },
+    "public/TVU_helper_attach_upload2.json": {
+        "hash": "f73f956df348234c567f18b468f27fcf"
+    },
+    "public/TVU_helper_attach_upload3.json": {
+        "hash": "62ec5a16eddbdad6072e086339e1062c"
+    },
+    "public/TVU_helper_attach_upload4.json": {
+        "hash": "02e9d90824a74b2c62456638413ef6d2"
     },
     "public/TVU_post_macros.json": {
         "hash": "bc7b549af07ea20c0148cbd01eae570c"

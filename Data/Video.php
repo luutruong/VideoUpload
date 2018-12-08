@@ -10,19 +10,18 @@ use XF\Mvc\Entity\AbstractCollection;
 
 class Video
 {
-    private $videos = [];
+    private $videos = null;
 
-    public function addVideos($threadId, AbstractCollection $videos)
+    public function addVideos(AbstractCollection $videos)
     {
-        $this->videos[$threadId] = $videos;
+        $this->videos = $videos;
     }
 
     /**
-     * @param int $threadId
      * @return null|AbstractCollection
      */
-    public function getVideos($threadId)
+    public function getVideos()
     {
-        return isset($this->videos[$threadId]) ? $this->videos[$threadId] : null;
+        return $this->videos;
     }
 }

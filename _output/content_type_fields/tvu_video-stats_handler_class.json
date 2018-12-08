@@ -1,0 +1,5 @@
+{
+    "content_type": "tvu_video",
+    "field_name": "stats_handler_class",
+    "field_value": "Truonglv\\VideoUpload\\Stats\\Video"
+}

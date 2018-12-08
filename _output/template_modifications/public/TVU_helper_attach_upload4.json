@@ -1,0 +1,9 @@
+{
+    "template": "helper_attach_upload",
+    "description": "Insert mustache template",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#<xf:mustache name=\"\\^uploading\"[^>]*>.+?<xf:mustache name=\"\\#thumbnail_url\">.+?</xf:mustache>#s",
+    "replace": "$0\n<xf:mustache name=\"#is_tvu_video\">\n<div class=\"contentRow-spaced attachUploadList-insertRow js-attachmentInsertRow\">\n\t<span>{{ phrase('insert:') }}</span>\n\t<span class=\"buttonGroup buttonGroup--aligned\">\n\t\t<xf:button class=\"button--small js-attachmentAction\" \n\t\t\t   data-action=\"tvu_video\">\n\t\t\t{{ phrase('tvu_insert_video') }}\n\t\t</xf:button>\n\t</span>\n</div>\n</xf:mustache>"
+}

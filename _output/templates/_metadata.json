@@ -8,5 +8,15 @@
         "version_id": 2000000,
         "version_string": "2.0.0",
         "hash": "06fde3ab36941ef15bbbb78e270ee47f"
+    },
+    "public/tvu_upload_video.less": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "434d5d3900f52a3015682812c238c0f2"
+    },
+    "public/tvu_upload_video_button.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "6c980192c280474253ff2d4eacf8c387"
     }
 }

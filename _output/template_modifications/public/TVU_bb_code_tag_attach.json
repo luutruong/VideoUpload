@@ -1,0 +1,9 @@
+{
+    "template": "bb_code_tag_attach",
+    "description": "Insert video html",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#\\A.*\\z#s",
+    "replace": "<xf:if is=\"$attachment && $attachment.hasTVUVideo()\">\n\t<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t\t method=\"renderBbCodeTagAttach\"\n\t\t\t\t params=\"{'attachment': $attachment}\" />\n<xf:else />\n\t$0\n</xf:if>"
+}
