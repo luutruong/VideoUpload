@@ -104,8 +104,7 @@ class Chunk extends AbstractService
         /** @var Video $videoRepo */
         $videoRepo = $this->repository('Truonglv\VideoUpload:Video');
 
-        $internalDataPath = $this->app->config('internalDataPath');
-
+        $internalDataPath = 'internal-data://';
         $chunkPath = $videoRepo->getChunkPath($this->attachmentHash, $file->getExtension(), $this->chunkNumber);
 
         $uploadedSize = $file->getFileSize();
@@ -130,7 +129,7 @@ class Chunk extends AbstractService
         }
 
         $this->db()->insert('xf_truonglv_videoupload_video_part', [
-            'path' => substr($chunkPath, strlen($internalDataPath) + 1),
+            'path' => ltrim(substr($chunkPath, strlen($internalDataPath) + 1), '/'),
             'upload_date' => \XF::$time
         ]);
 

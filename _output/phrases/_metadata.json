@@ -1,4 +1,10 @@
 {
+    "cron_entry.tl_VideoUpload_runHourly.txt": {
+        "global_cache": false,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "c1f6b284610517da647797e8fc1e04bd"
+    },
     "option.TVU_allowGuestViewVideos.txt": {
         "global_cache": false,
         "version_id": 2000000,
@@ -226,6 +232,12 @@
         "version_id": 2000000,
         "version_string": "2.0.0",
         "hash": "18c8f5612625be3eaba76cc4e5aaabcc"
+    },
+    "tvu_upload_video.txt": {
+        "global_cache": true,
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "1dc610930b894a7aa62e53a43fb6a37f"
     },
     "tvu_upload_with_date_time.txt": {
         "global_cache": false,

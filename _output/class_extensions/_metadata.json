@@ -1,5 +1,20 @@
 {
+    "XF-Attachment-Post_Truonglv-VideoUpload-XF-Attachment-Post.json": {
+        "hash": "8b00be9df97d318f1d245fa937ca03f4"
+    },
+    "XF-Entity-Attachment_Truonglv-VideoUpload-XF-Entity-Attachment.json": {
+        "hash": "eb1c91a08e15a2f3640006c33b988de4"
+    },
+    "XF-Entity-Thread_Truonglv-VideoUpload-XF-Entity-Thread.json": {
+        "hash": "467d9e3680472e781087007fc5cf4aff"
+    },
     "XF-Pub-Controller-Attachment_Truonglv-VideoUpload-XF-Pub-Controller-Attachment.json": {
         "hash": "20c2e2eb0a6e74206fbb1d03e043867f"
+    },
+    "XF-Pub-Controller-Post_Truonglv-VideoUpload-XF-Pub-Controller-Post.json": {
+        "hash": "31804e6b45e73df113b79ceb801b4854"
+    },
+    "XF-Pub-Controller-Thread_Truonglv-VideoUpload-XF-Pub-Controller-Thread.json": {
+        "hash": "4598bf8853a316a3dce3803697be7a90"
     }
 }

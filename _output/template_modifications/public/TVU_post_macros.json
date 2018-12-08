@@ -1,0 +1,9 @@
+{
+    "template": "post_macros",
+    "description": "Insert video into bottom post",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#<xf:if is=\"\\$post\\.attach_count\"[^>]*>(.+?)</xf:if>#si",
+    "replace": "<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderPostAttachments\"\n\t\t\t params=\"{'post': $post, 'thread': $thread}\" />"
+}

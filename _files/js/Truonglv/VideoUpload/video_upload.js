@@ -140,7 +140,6 @@
             var _this = this,
                 onResponse,
                 data;
-
             if (file.error) {
                 this.disableUploadButton(false);
 
@@ -170,6 +169,7 @@
             XF.ajax('POST', this.options.uploadUrl, data, onResponse)
                 .always(function() {
                     _this.disableUploadButton(false);
+                    _this.attachmentManager.setUploading(false);
                 });
         },
 

@@ -1,5 +1,11 @@
 {
     "public/TVU_QRM_insertUploadButton.json": {
         "hash": "ce4b9a19612e85f150f9f5457fcc4f6c"
+    },
+    "public/TVU_helper_attach_upload.json": {
+        "hash": "8335466d60fd78286a333295e70c76c8"
+    },
+    "public/TVU_post_macros.json": {
+        "hash": "bc7b549af07ea20c0148cbd01eae570c"
     }
 }

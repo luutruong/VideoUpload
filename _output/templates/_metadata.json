@@ -3,5 +3,10 @@
         "version_id": 2000000,
         "version_string": "2.0.0",
         "hash": "6bc52a52330d6aa1c8bc9c90df552171"
+    },
+    "public/tvu_bb_code_attach_video.html": {
+        "version_id": 2000000,
+        "version_string": "2.0.0",
+        "hash": "06fde3ab36941ef15bbbb78e270ee47f"
     }
 }

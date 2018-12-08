@@ -8,6 +8,7 @@ namespace Truonglv\VideoUpload\Service\Video;
 
 use XF\Util\File;
 use XF\FileWrapper;
+use XF\Entity\Attachment;
 use XF\Service\AbstractService;
 use Truonglv\VideoUpload\Callback;
 use XF\Attachment\AbstractHandler;
@@ -75,6 +76,10 @@ class Uploader extends AbstractService
             return false;
         }
 
+        if (!$editor->getWidth() || !$editor->getHeight()) {
+            return false;
+        }
+
         $fileName = $this->fileName;
         if ($oldExtension !== $editor->getExtension()) {
             $fileName = str_replace('.' . $oldExtension, '.' . $editor->getExtension(), $fileName);
@@ -96,12 +101,32 @@ class Uploader extends AbstractService
         $handler->beforeNewAttachment($file, $extra);
         $data = $attachmentPreparer->insertDataFromFile($file, \XF::visitor()->user_id, $extra);
 
-        return $attachmentPreparer->insertTemporaryAttachment(
+        // for workaround with this.
+        // https://xenforo.com/community/threads/xf-service-attachment-preparer-insertdatafromfile-ignore-some-extra-data-keys.157521/
+        $data->width = $extra['width'];
+        $data->height = $extra['height'];
+
+        $data->save();
+
+        $attachment = $attachmentPreparer->insertTemporaryAttachment(
             $handler,
             $data,
             $this->attachmentHash,
             $file
         );
+
+        $this->insertVideoRecord($attachment);
+
+        return $attachment;
+    }
+
+    protected function insertVideoRecord(Attachment $attachment)
+    {
+        /** @var \Truonglv\VideoUpload\Entity\Video $video */
+        $video = $this->em()->create('Truonglv\VideoUpload:Video');
+        $video->thread_id = 0;
+        $video->attachment_id = $attachment->attachment_id;
+        $video->save();
     }
 
     protected function getFinalVideoPath()

@@ -2,13 +2,13 @@
 
 namespace Truonglv\VideoUpload;
 
+use XF\Util\File;
 use XF\Db\Schema\Create;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;
 use XF\AddOn\StepRunnerUpgradeTrait;
 use XF\AddOn\StepRunnerUninstallTrait;
 use Truonglv\VideoUpload\DevHelper\SetupTrait;
-use XF\Util\File;
 
 class Setup extends AbstractSetup
 {
@@ -25,7 +25,7 @@ class Setup extends AbstractSetup
     public function uninstallStep1()
     {
         $this->doDropTables($this->getTables());
-        
+
         File::deleteAbstractedDirectory('internal-data://tvu_video_upload');
     }
 

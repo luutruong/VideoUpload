@@ -1,0 +1,9 @@
+{
+    "template": "helper_attach_upload",
+    "description": "Insert upload video button",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:macro name=\"uploaded_files_list\" arg-attachments=\"{$attachmentData.attachments}\" />",
+    "replace": "$0\n<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderUploadVideoButton\"\n\t\t\t params=\"{'attachmentData': $attachmentData}\" />"
+}

@@ -1,0 +1,26 @@
+<xf:if is="$xf.options.TVU_videoPlayer === 'videojs'">
+    <xf:macro template="videojs_macros" name="setup" />
+</xf:if>
+
+<xf:if is="{$videoPlayerType} === 'smartvideo'">
+    <xf:set var="$containerStyle">style="max-width:{$width}px"</xf:set>
+    <div class="tvu-video-container" {$containerStyle}>
+        <smartvideo class="swarm-fluid" src="{$video.getStreamUrl()}"
+                    id="tvu-video-{$video.video_id}"
+                    width="{$width}" height="{$height}" controls playsinline></smartvideo>
+    </div>
+<xf:else />
+    <xf:set var="$containerStyle">style="max-width:{$width}px;max-height:{$height}px"</xf:set>
+    <div class="tvu-video-container" {$containerStyle}>
+        <video controls preload
+               width="{$width}"
+               class="TVU_video{{ ($xf.options.TVU_videoPlayer === 'videojs') ? ' video-js vjs-fluid TVU_VideoSetup' : '' }}"
+        height="{$height}" id="tvu-video-{$video.video_id}">
+        <source src="{$video.getStreamUrl()}" type="video/{$attachment.extension}" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+        </video>
+    </div>
+</xf:if>

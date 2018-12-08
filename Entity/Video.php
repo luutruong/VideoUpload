@@ -6,6 +6,7 @@
 
 namespace Truonglv\VideoUpload\Entity;
 
+use XF\Entity\Attachment;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Structure;
 
@@ -24,6 +25,31 @@ use XF\Mvc\Entity\Structure;
  */
 class Video extends Entity
 {
+    public function getStreamUrl()
+    {
+        /** @var Attachment|null $attachment */
+        $attachment = $this->Attachment;
+        if (!$attachment) {
+            return null;
+        }
+
+        if (!empty($this->remote_url) && $this->app()->options()->TVU_useExternalViewUrl) {
+            $baseUrl = $this->app()->options()->TVU_baseUrl;
+            $remoteUrl = $this->remote_url;
+
+            if ($baseUrl === 'cdn.digitaloceanspaces.com') {
+                $remoteUrl = str_replace('.digitaloceanspaces.com', '.cdn.digitaloceanspaces.com', $remoteUrl);
+            }
+
+            return $remoteUrl;
+        }
+
+        return $this
+            ->app()
+            ->router('public')
+            ->buildLink('full:attachments', $attachment);
+    }
+
     public static function getStructure(Structure $structure)
     {
         $structure->table = 'xf_truonglv_videoupload_video';
@@ -32,7 +58,7 @@ class Video extends Entity
 
         $structure->columns = [
             'video_id' => ['type' => self::UINT, 'nullable' => true, 'autoIncrement' => true],
-            'thread_id' => ['type' => self::UINT, 'required' => true],
+            'thread_id' => ['type' => self::UINT, 'default' => 0],
             'attachment_id' => ['type' => self::UINT, 'required' => true],
             'remote_url' => ['type' => self::STR, 'default' => ''],
             'remote_upload_date' => ['type' => self::UINT, 'default' => 0],
