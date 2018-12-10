@@ -111,8 +111,9 @@ class Callback
     public static function getChunkSize()
     {
         $options = \XF::app()->options();
-
-        return min($options->TVU_chunkSize, $options->attachmentMaxFileSize) * 1024;
+        $serverMaxFileSize = \XF::app()->uploadMaxFilesize / 1024;
+        
+        return min($options->TVU_chunkSize, $serverMaxFileSize) * 1024;
     }
 
     private static function renderVideoHtml(
