@@ -108,10 +108,35 @@ class Callback
         return self::renderVideoHtml($video, $attachment, $templater);
     }
 
+    public static function renderSwarmifyJs($_, array $params, Templater $templater)
+    {
+        static $rendered = null;
+        if (!$rendered) {
+            $rendered = true;
+            $options = \XF::options();
+
+            $templater->inlineJs("
+                var swarmoptions = {
+                    swarmcdnkey: \"{$options->TVU_swarmifyKey}\",
+                    autoreplace: {
+                        youtube: false,
+                        videotag: true
+                    },
+                    theme: {
+                        primaryColor: \"#04ae3c\"
+                    }
+                };
+            ");
+            $templater->includeJs([
+                'src' => 'https://assets.swarmcdn.com/cross/swarmdetect.js'
+            ]);
+        }
+    }
+
     public static function getChunkSize()
     {
         $options = \XF::app()->options();
-        $serverMaxFileSize = \XF::app()->uploadMaxFilesize / 1024;
+        $serverMaxFileSize = \XF::app()->container('uploadMaxFilesize') / 1024;
         
         return min($options->TVU_chunkSize, $serverMaxFileSize) * 1024;
     }

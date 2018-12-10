@@ -2,7 +2,10 @@
     <xf:macro template="videojs_macros" name="setup" />
 </xf:if>
 
-<xf:if is="{$videoPlayerType} === 'smartvideo'">
+<xf:if is="$xf.options.TVU_videoPlayer === 'smartvideo'">
+    <xf:callback class="Truonglv\VideoUpload\Callback"
+                 method="renderSwarmifyJs"/>
+
     <xf:set var="$containerStyle">style="max-width:{$width}px"</xf:set>
     <div class="tvu-video-container" {$containerStyle}>
         <smartvideo class="swarm-fluid" src="{$video.getStreamUrl()}"
@@ -14,8 +17,9 @@
     <div class="tvu-video-container" {$containerStyle}>
         <video controls preload
                width="{$width}"
+               {{ $xf.options.TVU_videoPlayer === 'videojs' ? "data-setup=''" : '' }}
                class="TVU_video{{ ($xf.options.TVU_videoPlayer === 'videojs') ? ' video-js vjs-fluid TVU_VideoSetup' : '' }}"
-        height="{$height}" id="tvu-video-{$video.video_id}">
+               height="{$height}" id="tvu-video-{$video.video_id}">
         <source src="{$video.getStreamUrl()}" type="video/{$attachment.extension}" />
         <p class="vjs-no-js">
             To view this video please enable JavaScript, and consider upgrading to a web browser that
