@@ -2,12 +2,8 @@
 
 class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 {
-    /**
-     * @param XenForo_Upload $file
-     * @param array $input
-     * @return bool|int|XenForo_Phrase
-     * @throws XenForo_Exception
-     */
+    const FETCH_ATTACHMENT = 2;
+
     public function uploadChunkFile(XenForo_Upload $file, $hash, $fileName, $chunkNumber)
     {
         if (!$file->isValid()) {
@@ -74,15 +70,24 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
     public function prepareVideo(array $video, array $attachment)
     {
-        if (!empty($video['remote_url']) && Truonglv_VideoUpload_Option::get('useExternalViewUrl')) {
+        if (!empty($video['remote_url'])
+            && Truonglv_VideoUpload_Option::get('useExternalViewUrl')
+        ) {
             $baseUrl = Truonglv_VideoUpload_Option::get('baseUrl');
             $remoteUrl = $video['remote_url'];
 
-            if ($baseUrl === 'cdn.digitaloceanspaces.com') {
-                $remoteUrl = str_replace('.digitaloceanspaces.com', '.cdn.digitaloceanspaces.com', $remoteUrl);
-            }
+            switch (Truonglv_VideoUpload_Option::get('storageProvider')) {
+                case 'digitalocean':
+                    if ($baseUrl === 'cdn.digitaloceanspaces.com') {
+                        $remoteUrl = str_replace('.digitaloceanspaces.com', '.cdn.digitaloceanspaces.com', $remoteUrl);
+                    }
 
-            $video['streamUrl'] = $remoteUrl;
+                    $video['streamUrl'] = $remoteUrl;
+                    break;
+                case 'backblaze':
+                    $video['streamUrl'] = $remoteUrl;
+                    break;
+            }
         } else {
             $video['streamUrl'] = XenForo_Link::buildPublicLink('full:attachments', $attachment);
         }
@@ -380,6 +385,16 @@ class Truonglv_VideoUpload_Model_Video extends XenForo_Model
 
     protected function _prepareVideoFetchOptionsCustomized(&$selectFields, &$joinTables, array $fetchOptions)
     {
+        if (!empty($fetchOptions['join'])) {
+            if ($fetchOptions['join'] & self::FETCH_ATTACHMENT) {
+                $selectFields .= ',attachment.*,' . XenForo_Model_Attachment::$dataColumns;
+                $joinTables .= '
+                    LEFT JOIN xf_attachment AS attachment ON 
+                        (attachment.attachment_id = video.attachment_id)
+                    INNER JOIN xf_attachment_data AS data ON
+				        (data.data_id = attachment.data_id)';
+            }
+        }
     }
 
     protected function _prepareVideoOrderOptionsCustomized(array &$choices, array &$fetchOptions)

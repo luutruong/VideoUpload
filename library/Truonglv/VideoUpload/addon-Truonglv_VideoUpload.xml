@@ -25,7 +25,27 @@
 </xen:radiounit>
 ]]></template>
   </admin_templates>
-  <admin_template_modifications/>
+  <admin_template_modifications>
+    <modification template="tools_rebuild" modification_key="TVU_tools_rebuild" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
+	<h2 class="subHeading">{xen:phrase rebuild_attachment_thumbnails}</h2>
+	<xen:spinboxunit name="options[batch]" value="200" step="10" min="1" label="{xen:phrase items_to_process_per_page}:" />
+	
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="AttachmentThumb" />
+</xen:form>]]></find>
+      <replace><![CDATA[$0
+<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
+	<h2 class="subHeading">{xen:phrase tvu_upload_existing_videos_to_backblaze}</h2>
+	<xen:spinboxunit name="options[batch]" 
+					 value="200" step="10" min="1" 
+					 label="{xen:phrase items_to_process_per_page}:" />
+	
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="Truonglv_VideoUpload_Deferred_BackBlazeImporter" />
+</xen:form>]]></replace>
+    </modification>
+  </admin_template_modifications>
   <code_events/>
   <code_event_listeners>
     <listener event_id="file_health_check" execute_order="10" callback_class="Truonglv_VideoUpload_Listener" callback_method="file_health_check" active="1" hint="" description=""/>
@@ -64,6 +84,30 @@
 1={xen:phrase yes}</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="210"/>
+    </option>
+    <option option_id="TVU_backblazeAccountId" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="2200"/>
+    </option>
+    <option option_id="TVU_backblazeBaseUrl" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params>type=url</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="2200"/>
+    </option>
+    <option option_id="TVU_backblazeBucketId" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="2220"/>
+    </option>
+    <option option_id="TVU_backblazeMasterKey" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="2210"/>
     </option>
     <option option_id="TVU_baseUrl" edit_format="radio" data_type="string" can_backup="1">
       <default_value>cdn.digitaloceanspaces.com</default_value>
@@ -130,6 +174,13 @@ max=20</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="Truonglv_VideoUpload" display_order="60"/>
     </option>
+    <option option_id="TVU_storageProvider" edit_format="radio" data_type="string" can_backup="1">
+      <default_value>digitalocean</default_value>
+      <edit_format_params>digitalocean=Digital Ocean Spaces
+backblaze=BackBlaze</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="Truonglv_VideoUpload" display_order="1"/>
+    </option>
     <option option_id="TVU_swarmifyKey" edit_format="textbox" data_type="string" can_backup="1">
       <default_value></default_value>
       <edit_format_params></edit_format_params>
@@ -176,6 +227,14 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="option_TVU_allowGuestViewVideos_explain" version_id="1000002" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_autoConvertMp4" version_id="1000500" version_string="1.0.5"><![CDATA[Automatically convert videos to mp4 format]]></phrase>
     <phrase title="option_TVU_autoConvertMp4_explain" version_id="1000500" version_string="1.0.5"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_backblazeAccountId" version_id="1000701" version_string="1.0.7"><![CDATA[backblaze.com Account ID]]></phrase>
+    <phrase title="option_TVU_backblazeAccountId_explain" version_id="1000701" version_string="1.0.7"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_backblazeBaseUrl" version_id="1000701" version_string="1.0.7"><![CDATA[backblaze.com base file url]]></phrase>
+    <phrase title="option_TVU_backblazeBaseUrl_explain" version_id="1000701" version_string="1.0.7"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_backblazeBucketId" version_id="1000701" version_string="1.0.7"><![CDATA[backblaze.com Bucket ID]]></phrase>
+    <phrase title="option_TVU_backblazeBucketId_explain" version_id="1000701" version_string="1.0.7"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_backblazeMasterKey" version_id="1000701" version_string="1.0.7"><![CDATA[backblaze.com Master Key]]></phrase>
+    <phrase title="option_TVU_backblazeMasterKey_explain" version_id="1000701" version_string="1.0.7"><![CDATA[]]></phrase>
     <phrase title="option_TVU_baseUrl" version_id="1000001" version_string="1.0.0"><![CDATA[Base URL]]></phrase>
     <phrase title="option_TVU_baseUrl_explain" version_id="1000001" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_chunkSize" version_id="1000000" version_string="1.0.0"><![CDATA[Chunk Size (KB)]]></phrase>
@@ -196,6 +255,8 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="option_TVU_spacesBucket_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
     <phrase title="option_TVU_spacesRegion" version_id="1000000" version_string="1.0.0"><![CDATA[Space Region]]></phrase>
     <phrase title="option_TVU_spacesRegion_explain" version_id="1000000" version_string="1.0.0"><![CDATA[]]></phrase>
+    <phrase title="option_TVU_storageProvider" version_id="1000701" version_string="1.0.7"><![CDATA[Video Storage Provider]]></phrase>
+    <phrase title="option_TVU_storageProvider_explain" version_id="1000701" version_string="1.0.7"><![CDATA[]]></phrase>
     <phrase title="option_TVU_swarmifyKey" version_id="1000400" version_string="1.0.4"><![CDATA[Swarmify Key]]></phrase>
     <phrase title="option_TVU_swarmifyKey_explain" version_id="1000400" version_string="1.0.4"><![CDATA[]]></phrase>
     <phrase title="option_TVU_uploadPathTemplate" version_id="1000700" version_string="1.0.7"><![CDATA[Upload path template]]></phrase>
@@ -209,6 +270,7 @@ smartvideo=Smart Video Player (Swarmify)</edit_format_params>
     <phrase title="tvu_custom_location" version_id="1000700" version_string="1.0.7"><![CDATA[Custom location]]></phrase>
     <phrase title="tvu_insert_video" version_id="1000100" version_string="1.0.1"><![CDATA[Insert Video]]></phrase>
     <phrase title="tvu_stats_video_uploaded" version_id="1000400" version_string="1.0.4"><![CDATA[[tl] Thread Video Upload: Videos]]></phrase>
+    <phrase title="tvu_upload_existing_videos_to_backblaze" version_id="1000701" version_string="1.0.7"><![CDATA[[tl] Thread Video Upload: Upload existing videos to Backblaze.com]]></phrase>
     <phrase title="tvu_upload_to_root_directory" version_id="1000700" version_string="1.0.7"><![CDATA[Upload to root directory]]></phrase>
     <phrase title="tvu_upload_video" version_id="1000000" version_string="1.0.0"><![CDATA[Upload Video]]></phrase>
     <phrase title="tvu_upload_with_date_time" version_id="1000700" version_string="1.0.7"><![CDATA[Upload with template: <b>videos/{year}/{month}/{day}/</b>]]></phrase>
