@@ -14,15 +14,17 @@ use Truonglv\VideoUpload\Data\Video;
 
 class Callback
 {
+    public static $allowContentTypes = ['post'];
+
     public static function renderUploadVideoButton($_, array $params, Templater $templater)
     {
         if (!isset($params['attachmentData'])) {
-            throw new \InvalidArgumentException('Must be include `attachmentData` in param argument');
+            return null;
         }
 
         $attachmentData = $params['attachmentData'];
         if (empty($attachmentData['type'])
-            || $attachmentData['type'] !== 'post'
+            || !in_array($attachmentData['type'], self::$allowContentTypes, true)
             || !\XF::visitor()->hasPermission('general', 'tvu_uploadVideos')
         ) {
             return null;
@@ -30,6 +32,7 @@ class Callback
 
         return $templater->renderTemplate('public:tvu_upload_video_button', [
             'attachmentData' => $attachmentData,
+            'contentType' => $attachmentData['type'],
             'chunkSize' => self::getChunkSize()
         ]);
     }
@@ -49,7 +52,7 @@ class Callback
         $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
         $videos = $videoData->getVideos();
         if ($videos === null || !$videos->count()) {
-            return $templater->renderMacro('message_macros', 'attachments', [
+            return $templater->renderMacro('public:message_macros', 'attachments', [
                 'attachments' => $post->Attachments,
                 'message' => $post,
                 'canView' => $thread->canViewAttachments()
@@ -73,7 +76,7 @@ class Callback
         }
 
         if (!empty($attachments)) {
-            $html .= $templater->renderMacro('message_macros', 'attachments', [
+            $html .= $templater->renderMacro('public:message_macros', 'attachments', [
                 'attachments' => $attachments,
                 'message' => $post,
                 'canView' => $thread->canViewAttachments()

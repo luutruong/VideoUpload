@@ -2,6 +2,7 @@
 
 namespace Truonglv\VideoUpload;
 
+use XF\Db\Schema\Alter;
 use XF\Util\File;
 use XF\Db\Schema\Create;
 use XF\AddOn\AbstractSetup;
@@ -29,6 +30,20 @@ class Setup extends AbstractSetup
         File::deleteAbstractedDirectory('internal-data://tvu_video_upload');
     }
 
+    public function upgrade2000200Step1()
+    {
+        $this->doAlterTables($this->getAlters1());
+    }
+
+    public function upgrade2000200Step2()
+    {
+        $this->query('
+            UPDATE `xf_truonglv_videoupload_video`
+            SET `content_type` = ?
+            WHERE `content_type` = ?
+        ', ['thread', '']);
+    }
+
     protected function getTables1()
     {
         $tables = [];
@@ -53,5 +68,22 @@ class Setup extends AbstractSetup
         };
 
         return $tables;
+    }
+
+    protected function getAlters1()
+    {
+        $alters = [];
+
+        $alters['xf_truonglv_videoupload_video'] = [
+            'content_type' => function (Alter $table) {
+                $table->addColumn('content_type', 'varchar', 25)->setDefault('');
+            },
+            'content_id' => function (Alter $table) {
+                $table->renameColumn('thread_id', 'content_id');
+                $table->addKey(['content_type', 'content_id']);
+            }
+        ];
+
+        return $alters;
     }
 }

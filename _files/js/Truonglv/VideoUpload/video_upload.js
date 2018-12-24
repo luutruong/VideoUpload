@@ -5,6 +5,7 @@
         options: {
             attachmentHash: null,
             contextData: null,
+            contentType: null,
             uploadUrl: null,
             chunkSize: 0,
             simultaneousUploads: 3,
@@ -100,6 +101,7 @@
                 target: this.options.uploadUrl,
                 query: $.extend(this.attachmentManager.uploadQueryParams(), {
                     attachmentHash: this.options.attachmentHash,
+                    contentType: this.options.contentType,
                     contextData: JSON.stringify(this.options.contextData)
                 }),
                 chunkSize: this.options.chunkSize,

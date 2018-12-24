@@ -2,6 +2,7 @@
 
 namespace Truonglv\VideoUpload\XF\Pub\Controller;
 
+use Truonglv\VideoUpload\Callback;
 use Truonglv\VideoUpload\Utils\File;
 use Truonglv\VideoUpload\Service\Video\Chunk;
 use Truonglv\VideoUpload\Service\Video\Uploader;
@@ -21,7 +22,8 @@ class Attachment extends XFCP_Attachment
 
             'attachmentHash' => 'str',
             'contextData' => 'str',
-            'isCompleted' => 'bool'
+            'isCompleted' => 'bool',
+            'contentType' => 'str'
         ]);
 
         $contextData = json_decode($filtered['contextData'], true);
@@ -29,6 +31,7 @@ class Attachment extends XFCP_Attachment
         if (empty($contextData)
             || empty($filtered['attachmentHash'])
             || !\XF::visitor()->hasPermission('general', 'tvu_uploadVideos')
+            || !in_array($filtered['contentType'], Callback::$allowContentTypes, true)
         ) {
             return $this->noPermission();
         }
@@ -40,7 +43,7 @@ class Attachment extends XFCP_Attachment
         }
 
         $attachmentRepo = $this->getAttachmentRepo();
-        $handler = $attachmentRepo->getAttachmentHandler('post');
+        $handler = $attachmentRepo->getAttachmentHandler($filtered['contentType']);
 
         if (!$handler) {
             return $this->noPermission();
