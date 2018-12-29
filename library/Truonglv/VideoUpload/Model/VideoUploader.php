@@ -30,9 +30,27 @@ class Truonglv_VideoUpload_Model_VideoUploader extends XenForo_Model
 
         switch ($storageProvider) {
             case 'digitalocean':
+                if (!empty($video['remote_url'])
+                    && (
+                        strpos($video['remote_url'], 'digitaloceanspaces.com') !== false
+                        || strpos($video['remote_url'], 'digitalocean.com') !== false
+                    )
+                ) {
+                    return;
+                }
+
                 $videoRemoteUrl = $this->_doUploadToDigitalOceanSpaces($video, $filePath);
                 break;
             case 'backblaze':
+                if (!empty($video['remote_url'])
+                    && (
+                        strpos($video['remote_url'], 'backblaze.com') !== false
+                        || strpos($video['remote_url'], 'backblazeb2.com') !== false
+                    )
+                ) {
+                    return;
+                }
+
                 $videoRemoteUrl = $this->_doUploadToBackBlaze($video, $filePath);
                 break;
             default:
@@ -57,119 +75,17 @@ class Truonglv_VideoUpload_Model_VideoUploader extends XenForo_Model
 
     protected function _doUploadToBackBlaze(array $video, $filePath)
     {
-        $accountId = Truonglv_VideoUpload_Option::get('backblazeAccountId');
-        $masterKey = Truonglv_VideoUpload_Option::get('backblazeMasterKey');
-        $bucketId = Truonglv_VideoUpload_Option::get('backblazeBucketId');
-        $baseFileUrl = Truonglv_VideoUpload_Option::get('backblazeBaseUrl');
+        $fileName = $this->_getVideoPath($video);
+        $uploader = new Truonglv_VideUpload_Helper_BackBlaze($filePath, $fileName);
 
-        if (empty($accountId) || empty($masterKey) || empty($bucketId) || empty($baseFileUrl)) {
-            throw new XenForo_Exception('Invalid options setup for Backblaze provider');
-        }
-
-        $apiUrl = null;
-        $authToken = null;
-
-        $logPrefix = '[tl] Thread Video Upload: ';
-
-        // step 1: get api URL & auth token
-        try {
-            $client = XenForo_Helper_Http::getClient('https://api.backblazeb2.com/b2api/v2/b2_authorize_account');
-            $client->setAuth($accountId, $masterKey);
-
-            $response = $client->request('GET');
-            $body = $response->getBody();
-
-            $json = json_decode($body, true);
-            if (!empty($json['apiUrl']) && !empty($json['authorizationToken'])) {
-                $apiUrl = $json['apiUrl'];
-                $authToken = $json['authorizationToken'];
-            } else {
-                XenForo_Error::logException(
-                    new XenForo_Exception(sprintf(
-                        'Unexpected response body $url=%s $body=%s',
-                        'https://api.backblazeb2.com/b2api/v1/b2_authorize_account',
-                        $body
-                    )),
-                    false,
-                    $logPrefix
-                );
-            }
-        } catch (\Exception $e) {
-            XenForo_Error::logException($e, false, $logPrefix);
-        }
-
-        if (empty($apiUrl) || empty($authToken)) {
-            return false;
-        }
-
-        $uploadUrl = null;
-        $ch = curl_init("{$apiUrl}/b2api/v2/b2_get_upload_url");
-
-        $data = array("bucketId" => $bucketId);
-        $postFields = json_encode($data);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-
-        $headers = array();
-        $headers[] = "Authorization: {$authToken}";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $json = json_decode($response, true);
-
-        if (empty($json['uploadUrl'])) {
-            XenForo_Error::logException(
-                new XenForo_Exception('No `uploadUrl` from response. $body=' . $body)
-            );
-
-            return false;
-        }
-        $uploadUrl = $json['uploadUrl'];
-        $authToken = $json['authorizationToken'];
-
-        $fp = fopen($filePath, 'rb');
-        if (!$fp) {
-            throw new XenForo_Exception('Cannot read file');
-        }
-
-        $totalSizes = filesize($filePath);
-        $ch = curl_init($uploadUrl);
-        $fileSha1 = sha1_file($filePath);
-
-        $headers = array(
-            'Authorization: ' . $authToken,
-            'X-Bz-File-Name: ' . $this->_getVideoPath($video),
-            'X-Bz-Content-Sha1: ' . $fileSha1,
-            'Content-Type: ' . Zend_Service_Amazon_S3::getMimeType($filePath)
-        );
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, fread($fp, $totalSizes));
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-        fclose($fp);
-
-        $json = json_decode($response, true);
-
-        if (!empty($json['contentSha1']) && $json['contentSha1'] === $fileSha1) {
+        $success = $uploader->upload();
+        if ($success) {
             return sprintf(
                 '%s/%s',
-                rtrim($baseFileUrl, '/'),
-                $json['fileName']
+                rtrim($uploader->getBaseFileUrl(), '/'),
+                $fileName
             );
         }
-
-        XenForo_Error::logException(
-            new XenForo_Exception('Failed verify response body. $body=' . $response),
-            false,
-            $logPrefix
-        );
 
         return false;
     }
