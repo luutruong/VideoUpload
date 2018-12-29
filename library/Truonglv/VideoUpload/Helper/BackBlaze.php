@@ -3,7 +3,7 @@
  * @license
  * Copyright 2018 TruongLuu. All Rights Reserved.
  */
-class Truonglv_VideUpload_Helper_BackBlaze
+class Truonglv_VideoUpload_Helper_BackBlaze
 {
     private $_path;
     private $_fileName;

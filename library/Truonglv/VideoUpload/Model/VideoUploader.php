@@ -76,7 +76,7 @@ class Truonglv_VideoUpload_Model_VideoUploader extends XenForo_Model
     protected function _doUploadToBackBlaze(array $video, $filePath)
     {
         $fileName = $this->_getVideoPath($video);
-        $uploader = new Truonglv_VideUpload_Helper_BackBlaze($filePath, $fileName);
+        $uploader = new Truonglv_VideoUpload_Helper_BackBlaze($filePath, $fileName);
 
         $success = $uploader->upload();
         if ($success) {
