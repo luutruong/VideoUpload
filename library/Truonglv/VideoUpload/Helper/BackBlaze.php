@@ -113,9 +113,7 @@ class Truonglv_VideoUpload_Helper_BackBlaze
         $json = json_decode($response, true);
 
         if (empty($json['uploadUrl'])) {
-            $this->_logError(
-                new XenForo_Exception('No `uploadUrl` from response. $body=' . $response)
-            );
+            $this->_logError("_getUploadPartUrl \$response={$response}");
 
             return false;
         }
@@ -131,9 +129,9 @@ class Truonglv_VideoUpload_Helper_BackBlaze
             'bucketId' => $this->_bucketId,
             'fileName' => $this->_fileName,
             'contentType' => Zend_Service_Amazon_S3::getMimeType($this->_fileName),
-            'fileInfo' => json_encode(array(
+            'fileInfo' => array(
                 'large_file_sha1' => sha1_file($this->_path)
-            ))
+            )
         );
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
