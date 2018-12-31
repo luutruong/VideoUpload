@@ -13,6 +13,7 @@ namespace Truonglv\VideoUpload\XF\Entity
 	class XFCP_Attachment extends \XF\Entity\Attachment {}
 	class XFCP_ProfilePost extends \XF\Entity\ProfilePost {}
 	class XFCP_Thread extends \XF\Entity\Thread {}
+	class XFCP_User extends \XF\Entity\User {}
 }
 
 namespace Truonglv\VideoUpload\XF\Pub\Controller
