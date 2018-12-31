@@ -2,11 +2,11 @@
 
 namespace Truonglv\VideoUpload\XF\Pub\Controller;
 
-use Truonglv\VideoUpload\Data\ProfilePostForm;
 use XF\Entity\User;
-use XF\Entity\UserProfile;
-use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
+use XF\Mvc\ParameterBag;
+use XF\Entity\UserProfile;
+use Truonglv\VideoUpload\Data\ProfilePostForm;
 
 class Member extends XFCP_Member
 {
@@ -20,7 +20,8 @@ class Member extends XFCP_Member
             $attachmentRepo = $this->repository('XF:Attachment');
 
             if ($this->tvuCanUploadAttachments($user)) {
-                $attachmentHash = md5(sprintf('%s%s%d',
+                $attachmentHash = md5(sprintf(
+                    '%s%s%d',
                     __METHOD__,
                     $this->app()->config('globalSalt'),
                     $user->user_id

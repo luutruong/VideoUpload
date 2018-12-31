@@ -2,9 +2,9 @@
 
 namespace Truonglv\VideoUpload\XF\Pub\Controller;
 
-use Truonglv\VideoUpload\Data\ProfilePostForm;
-use XF\Mvc\ParameterBag;
 use XF\Mvc\Reply\View;
+use XF\Mvc\ParameterBag;
+use Truonglv\VideoUpload\Data\ProfilePostForm;
 
 class ProfilePost extends XFCP_ProfilePost
 {

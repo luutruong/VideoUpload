@@ -6,13 +6,12 @@
 
 namespace Truonglv\VideoUpload;
 
-use Truonglv\VideoUpload\Data\ProfilePostForm;
 use XF\Entity\Post;
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
-use XF\Entity\User;
 use XF\Template\Templater;
 use Truonglv\VideoUpload\Data\Video;
+use Truonglv\VideoUpload\Data\ProfilePostForm;
 
 class Callback
 {

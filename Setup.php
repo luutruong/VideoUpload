@@ -2,8 +2,8 @@
 
 namespace Truonglv\VideoUpload;
 
-use XF\Db\Schema\Alter;
 use XF\Util\File;
+use XF\Db\Schema\Alter;
 use XF\Db\Schema\Create;
 use XF\AddOn\AbstractSetup;
 use XF\AddOn\StepRunnerInstallTrait;

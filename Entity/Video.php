@@ -13,7 +13,8 @@ use XF\Mvc\Entity\Structure;
 /**
  * COLUMNS
  * @property int|null video_id
- * @property int thread_id
+ * @property int content_id
+ * @property string content_type
  * @property int attachment_id
  * @property string remote_url
  * @property int remote_upload_date

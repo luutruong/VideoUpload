@@ -3,12 +3,13 @@
  * @license
  * Copyright 2018 TruongLuu. All Rights Reserved.
  */
+
 namespace Truonglv\VideoUpload\Attachment;
 
-use XF\Attachment\AbstractHandler;
-use XF\Entity\Attachment;
 use XF\Entity\User;
+use XF\Entity\Attachment;
 use XF\Mvc\Entity\Entity;
+use XF\Attachment\AbstractHandler;
 
 class ProfilePost extends AbstractHandler
 {
@@ -73,6 +74,7 @@ class ProfilePost extends AbstractHandler
         $videoExtensions = array_map('trim', $videoExtensions);
 
         $constraints['extensions'] = array_merge(['png', 'jpeg', 'jpg', 'gif'], $videoExtensions);
+
         return $constraints;
     }
 
