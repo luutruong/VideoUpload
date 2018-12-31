@@ -19,5 +19,14 @@
     },
     "public/TVU_post_macros.json": {
         "hash": "bc7b549af07ea20c0148cbd01eae570c"
+    },
+    "public/tvu_profile_post_macros.json": {
+        "hash": "fd5f647ab36c4b384642a6bf886a868a"
+    },
+    "public/tvu_profile_post_macros2.json": {
+        "hash": "5ac0074be4588ddd1fd9e598f723dc34"
+    },
+    "public/tvu_profile_post_macros3.json": {
+        "hash": "b41de0db96113e4fd62a3bf763debd88"
     }
 }

@@ -1,3 +1,8 @@
+<xf:if is="$contentType !== 'post'">
+    <xf:macro template="helper_attach_upload"
+              name="upload_block"
+              arg-attachmentData="{$attachmentData}"/>
+</xf:if>
 <xf:js src="Truonglv/VideoUpload/video_upload.js"
        min="1"
        addon="Truonglv/VideoUpload"/>

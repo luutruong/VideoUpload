@@ -1,0 +1,9 @@
+{
+    "template": "profile_post_macros",
+    "description": "Insert upload files.",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:button type=\"submit\" class=\"button--primary\">{{ phrase('post_verb') }}</xf:button>",
+    "replace": "<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderProfilePostUploadButton\"\n\t\t\t params=\"{'user': $user}\"/>\n$0"
+}

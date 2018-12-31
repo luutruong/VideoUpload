@@ -1,0 +1,9 @@
+{
+    "template": "profile_post_macros",
+    "description": "Insert 'attachment-manager' into form",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "preg_replace",
+    "find": "#<xf:form[^>](.+)data-xf-init=\"quick-reply(.*?)\"([^>]+)>#s",
+    "replace": "<xf:form $1 data-xf-init=\"quick-reply attachment-manager$2\" $3>"
+}

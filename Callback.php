@@ -6,18 +6,26 @@
 
 namespace Truonglv\VideoUpload;
 
+use Truonglv\VideoUpload\Data\ProfilePostForm;
 use XF\Entity\Post;
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
+use XF\Entity\User;
 use XF\Template\Templater;
 use Truonglv\VideoUpload\Data\Video;
 
 class Callback
 {
-    public static $allowContentTypes = ['post'];
+    public static $allowContentTypes = ['post', 'profile_post'];
 
     public static function renderUploadVideoButton($_, array $params, Templater $templater)
     {
+        static $depth = 0;
+        if ($depth >= 1) {
+            return null;
+        }
+        $depth++;
+
         if (!isset($params['attachmentData'])) {
             return null;
         }
@@ -35,6 +43,24 @@ class Callback
             'contentType' => $attachmentData['type'],
             'chunkSize' => self::getChunkSize()
         ]);
+    }
+
+    public static function renderProfilePostUploadButton($_, array $params, Templater $templater)
+    {
+        if (empty($params['user'])) {
+            return null;
+        }
+        /** @var User $user */
+        $user = $params['user'];
+        /** @var ProfilePostForm $formData */
+        $formData = \XF::app()->data('Truonglv\VideoUpload:ProfilePostForm');
+        $attachmentData = $formData->getAttachmentData($user->user_id);
+
+        if (empty($attachmentData)) {
+            return null;
+        }
+
+        return self::renderUploadVideoButton(null, ['attachmentData' => $attachmentData], $templater);
     }
 
     public static function renderPostAttachments($_, array $params, Templater $templater)

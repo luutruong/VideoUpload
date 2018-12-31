@@ -1,0 +1,5 @@
+{
+    "content_type": "profile_post",
+    "field_name": "attachment_handler_class",
+    "field_value": "Truonglv\\VideoUpload\\Attachment\\ProfilePost"
+}
