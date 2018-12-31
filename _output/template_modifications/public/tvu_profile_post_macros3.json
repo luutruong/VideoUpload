@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<article class=\"message-body\">\n\t\t\t\t\t\t\t{{ structured_text($profilePost.message) }}\n\t\t\t\t\t\t</article>",
-    "replace": "$0\n<xf:if is=\"$profilePost.attach_count\">\n\t<xf:macro template=\"message_macros\" name=\"attachments\"\n\t\t\t  arg-attachments=\"{$profilePost.Attachments}\"\n\t\t\t  arg-message=\"{$profilePost}\"\n\t\t\t  arg-canView=\"{{ true }}\" />\n</xf:if>"
+    "replace": "$0\n<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderPostAttachments\"\n\t\t\t params=\"{'entity': $profilePost, 'canViewAttachments': true}\" />"
 }

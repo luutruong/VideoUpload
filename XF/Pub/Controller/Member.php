@@ -39,6 +39,10 @@ class Member extends XFCP_Member
 
             $profilePosts = $response->getParam('profilePosts');
             $attachmentRepo->addAttachmentsToContent($profilePosts, 'profile_post');
+
+            /** @var \Truonglv\VideoUpload\ControllerPlugin\Video $videoPlugin */
+            $videoPlugin = $this->plugin('Truonglv\VideoUpload:Video');
+            $videoPlugin->collectVideos($profilePosts);
         }
 
         return $response;

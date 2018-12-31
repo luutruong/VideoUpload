@@ -14,11 +14,12 @@ class Post extends XFCP_Post
 
         if ($container instanceof \XF\Entity\Post) {
             $videoFinder = \XF::app()->finder('Truonglv\VideoUpload:Video');
-            $videoFinder->where('attachment_id', $attachment->attachment_id);
+            $videoFinder->where('attachment_id', $attachment->attachment_id)
+                ->where('content_type', 'thread');
 
             /** @var Video $video */
             foreach ($videoFinder->fetch() as $video) {
-                $video->thread_id = $container->Thread->thread_id;
+                $video->content_id = $container->Thread->thread_id;
                 $video->save();
             }
         }

@@ -22,6 +22,14 @@ class Uploader extends AbstractService
     private $totalSize;
     private $fileName;
     private $totalChunks;
+    private $handler;
+
+    public function __construct(\XF\App $app, AbstractHandler $handler)
+    {
+        parent::__construct($app);
+
+        $this->handler = $handler;
+    }
 
     public function setAttachmentHash($attachmentHash)
     {
@@ -55,12 +63,13 @@ class Uploader extends AbstractService
         return $this;
     }
 
-    public function upload(AbstractHandler $handler)
+    public function upload()
     {
         $this->ensureAllOptionsWasSet();
 
         $videoPath = $this->getFinalVideoPath();
         $videoTemp = $this->mergeVideoParts();
+        $handler = $this->handler;
 
         if (!$videoTemp) {
             return false;
@@ -88,23 +97,18 @@ class Uploader extends AbstractService
         /** @var Preparer $attachmentPreparer */
         $attachmentPreparer = $this->service('XF:Attachment\Preparer');
 
-        $extra = [
-            'width' => $editor->getWidth(),
-            'height' => $editor->getHeight()
-        ];
-
         $tempFile = File::copyAbstractedPathToTempFile($videoPath);
         File::deleteFromAbstractedPath($videoPath);
 
         $file = new FileWrapper($tempFile, $fileName);
 
-        $handler->beforeNewAttachment($file, $extra);
-        $data = $attachmentPreparer->insertDataFromFile($file, \XF::visitor()->user_id, $extra);
+        $handler->beforeNewAttachment($file);
+        $data = $attachmentPreparer->insertDataFromFile($file, \XF::visitor()->user_id);
 
         // for workaround with this.
-        // https://xenforo.com/community/threads/xf-service-attachment-preparer-insertdatafromfile-ignore-some-extra-data-keys.157521/
-        $data->width = $extra['width'];
-        $data->height = $extra['height'];
+        // https://xenforo.com/community/threads/157521/
+        $data->width = $editor->getWidth();
+        $data->height = $editor->getHeight();
 
         $data->save();
 
@@ -124,9 +128,25 @@ class Uploader extends AbstractService
     {
         /** @var \Truonglv\VideoUpload\Entity\Video $video */
         $video = $this->em()->create('Truonglv\VideoUpload:Video');
-        $video->thread_id = 0;
+
+        $video->content_id = 0;
+        $video->content_type = $this->getVideoContentType();
         $video->attachment_id = $attachment->attachment_id;
+
         $video->save();
+    }
+
+    protected function getVideoContentType()
+    {
+        $contentType = $this->handler->getContentType();
+        switch ($contentType) {
+            case 'post':
+                return 'thread';
+            case 'profile_post':
+                return 'user';
+            default:
+                return $contentType;
+        }
     }
 
     protected function getFinalVideoPath()

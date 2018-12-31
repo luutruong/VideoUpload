@@ -81,6 +81,7 @@ class Setup extends AbstractSetup
             'content_id' => function (Alter $table) {
                 $table->renameColumn('thread_id', 'content_id');
                 $table->addKey(['content_type', 'content_id']);
+                $table->dropIndexes(['thread_id']);
             }
         ];
 

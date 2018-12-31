@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "preg_replace",
     "find": "#<xf:if is=\"\\$post\\.attach_count\"[^>]*>(.+?)</xf:if>#si",
-    "replace": "<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderPostAttachments\"\n\t\t\t params=\"{'post': $post, 'thread': $thread}\" />"
+    "replace": "<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderPostAttachments\"\n\t\t\t params=\"{'entity': $post, 'canViewAttachments': $thread.canViewAttachments()}\" />"
 }

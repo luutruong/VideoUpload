@@ -16,7 +16,7 @@ class Post extends XFCP_Post
 
             /** @var \Truonglv\VideoUpload\ControllerPlugin\Video $videoPlugin */
             $videoPlugin = $this->plugin('Truonglv\VideoUpload:Video');
-            $videoPlugin->collectVideos($thread, [$post->post_id => $post]);
+            $videoPlugin->collectVideos([$post->post_id => $post]);
         }
 
         return $response;

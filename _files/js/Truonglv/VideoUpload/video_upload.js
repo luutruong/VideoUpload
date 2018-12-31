@@ -176,6 +176,7 @@
                 flowTotalSize: file.size,
                 contextData: JSON.stringify(this.options.contextData),
                 attachmentHash: this.options.attachmentHash,
+                contentType: this.options.contentType,
                 isCompleted: true
             };
 

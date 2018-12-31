@@ -6,6 +6,7 @@
 
 namespace Truonglv\VideoUpload\Attachment;
 
+use Truonglv\VideoUpload\Entity\Video;
 use XF\Entity\User;
 use XF\Entity\Attachment;
 use XF\Mvc\Entity\Entity;
@@ -30,6 +31,23 @@ class ProfilePost extends AbstractHandler
 
         $container->attach_count--;
         $container->save();
+    }
+
+    public function onAssociation(Attachment $attachment, Entity $container = null)
+    {
+        parent::onAssociation($attachment, $container);
+
+        if ($container instanceof \XF\Entity\ProfilePost) {
+            $videoFinder = \XF::app()->finder('Truonglv\VideoUpload:Video');
+            $videoFinder->where('attachment_id', $attachment->attachment_id)
+                ->where('content_type', 'user');
+
+            /** @var Video $video */
+            foreach ($videoFinder->fetch() as $video) {
+                $video->content_id = $container->User->user_id;
+                $video->save();
+            }
+        }
     }
 
     public function getContainerIdFromContext(array $context)

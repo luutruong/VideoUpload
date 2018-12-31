@@ -11,12 +11,11 @@ class Thread extends XFCP_Thread
     {
         $response = parent::actionIndex($params);
         if ($response instanceof View) {
-            $thread = $response->getParam('thread');
             $posts = $response->getParam('posts');
 
             /** @var \Truonglv\VideoUpload\ControllerPlugin\Video $videoPlugin */
             $videoPlugin = $this->plugin('Truonglv\VideoUpload:Video');
-            $videoPlugin->collectVideos($thread, $posts);
+            $videoPlugin->collectVideos($posts);
         }
 
         return $response;
@@ -26,12 +25,11 @@ class Thread extends XFCP_Thread
     {
         $response = parent::getNewPostsReply($thread, $lastDate);
         if ($response instanceof View) {
-            $thread = $response->getParam('thread');
             $posts = $response->getParam('posts');
 
             /** @var \Truonglv\VideoUpload\ControllerPlugin\Video $videoPlugin */
             $videoPlugin = $this->plugin('Truonglv\VideoUpload:Video');
-            $videoPlugin->collectVideos($thread, $posts);
+            $videoPlugin->collectVideos($posts);
         }
 
         return $response;

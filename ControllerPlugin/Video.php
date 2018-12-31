@@ -15,16 +15,14 @@ use XF\ControllerPlugin\AbstractPlugin;
 class Video extends AbstractPlugin
 {
     /**
-     * @param Thread $thread
-     * @param array|AbstractCollection $posts
+     * @param array|AbstractCollection $entities
      */
-    public function collectVideos(Thread $thread, $posts)
+    public function collectVideos($entities)
     {
         $attachmentIds = [];
 
-        /** @var Post $post */
-        foreach ($posts as $post) {
-            $attachments = $post->Attachments;
+        foreach ($entities as $entity) {
+            $attachments = $entity->Attachments;
             foreach ($attachments as $index => $attachment) {
                 if ($attachment->Data->width > 0
                     && $attachment->Data->height > 0
@@ -37,7 +35,6 @@ class Video extends AbstractPlugin
 
         if ($attachmentIds) {
             $videoFinder = $this->finder('Truonglv\VideoUpload:Video');
-            $videoFinder->where('thread_id', $thread->thread_id);
             $videoFinder->where('attachment_id', $attachmentIds);
 
             $videos = $videoFinder->fetch();

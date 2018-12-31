@@ -8,6 +8,7 @@ namespace Truonglv\VideoUpload\Repository;
 
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
+use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Repository;
 
@@ -29,7 +30,11 @@ class Video extends Repository
         if ($entity instanceof Attachment) {
             $videoFinder->where('attachment_id', $entity->attachment_id);
         } elseif ($entity instanceof Thread) {
-            $videoFinder->where('thread_id', $entity->thread_id);
+            $videoFinder->where('content_id', $entity->thread_id);
+            $videoFinder->where('content_type', 'thread');
+        } elseif ($entity instanceof User) {
+            $videoFinder->where('content_id', $entity->user_id);
+            $videoFinder->where('content_type', 'user');
         } else {
             $videoFinder->whereImpossible();
         }

@@ -68,14 +68,14 @@ class Attachment extends XFCP_Attachment
 
         if (!empty($filtered['isCompleted'])) {
             /** @var Uploader $uploader */
-            $uploader = $this->service('Truonglv\VideoUpload:Video\Uploader');
+            $uploader = $this->service('Truonglv\VideoUpload:Video\Uploader', $handler);
             $uploader
                 ->setAttachmentHash($filtered['attachmentHash'])
                 ->setFileName($filtered['flowFilename'])
                 ->setTotalChunks($filtered['flowTotalChunks'])
                 ->setTotalSize($filtered['flowTotalSize']);
 
-            $attachment = $uploader->upload($handler);
+            $attachment = $uploader->upload();
 
             if (!$attachment) {
                 return $this->error(\XF::phrase('tvu_an_error_occurred_while_process_video'), 400);

@@ -60,7 +60,8 @@ class Video extends Entity
         $structure->columns = [
             'video_id' => ['type' => self::UINT, 'nullable' => true, 'autoIncrement' => true],
             'content_id' => ['type' => self::UINT, 'default' => 0],
-            'content_type' => ['type' => self::STR, 'maxLength' => 25, 'allowedValues' => ['thread', 'profile_post']],
+            'content_type' => ['type' => self::STR, 'maxLength' => 25,
+                'allowedValues' => ['thread', 'user']],
             'attachment_id' => ['type' => self::UINT, 'required' => true],
             'remote_url' => ['type' => self::STR, 'default' => ''],
             'remote_upload_date' => ['type' => self::UINT, 'default' => 0],

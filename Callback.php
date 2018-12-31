@@ -62,12 +62,14 @@ class Callback
 
     public static function renderPostAttachments($_, array $params, Templater $templater)
     {
-        /** @var Thread $thread */
-        $thread = $params['thread'];
-        /** @var Post $post */
-        $post = $params['post'];
+        $params = array_replace([
+            'canViewAttachments' => false,
+            'entity' => null
+        ], $params);
+        /** @var Post $entity */
+        $entity = $params['entity'];
 
-        if (!$post->attach_count) {
+        if (!$entity->attach_count) {
             return null;
         }
 
@@ -76,19 +78,19 @@ class Callback
         $videos = $videoData->getVideos();
         if ($videos === null || !$videos->count()) {
             return $templater->renderMacro('public:message_macros', 'attachments', [
-                'attachments' => $post->Attachments,
-                'message' => $post,
-                'canView' => $thread->canViewAttachments()
+                'attachments' => $entity->Attachments,
+                'message' => $entity,
+                'canView' => $params['canViewAttachments']
             ]);
         }
 
-        $attachments = $post->Attachments;
+        $attachments = $entity->Attachments;
         $videosGrouped = $videos->groupBy('attachment_id');
         $html = '';
 
         foreach ($attachments as $index => $attachment) {
             if (isset($videosGrouped[$attachment->attachment_id])
-                && !$post->isAttachmentEmbedded($attachment->attachment_id)
+                && !$entity->isAttachmentEmbedded($attachment->attachment_id)
             ) {
                 unset($attachments[$index]);
 
@@ -101,8 +103,8 @@ class Callback
         if (!empty($attachments)) {
             $html .= $templater->renderMacro('public:message_macros', 'attachments', [
                 'attachments' => $attachments,
-                'message' => $post,
-                'canView' => $thread->canViewAttachments()
+                'message' => $entity,
+                'canView' => $params['canViewAttachments']
             ]);
         }
 
