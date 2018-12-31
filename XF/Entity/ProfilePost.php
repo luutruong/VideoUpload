@@ -6,6 +6,16 @@ use XF\Mvc\Entity\Structure;
 
 class ProfilePost extends XFCP_ProfilePost
 {
+    public function isAttachmentEmbedded($attachmentId)
+    {
+        $parentCallable = ['parent', 'isAttachmentEmbedded'];
+        if (is_callable($parentCallable)) {
+            return call_user_func($parentCallable, $attachmentId);
+        }
+
+        return false;
+    }
+
     public static function getStructure(Structure $structure)
     {
         $structure = parent::getStructure($structure);

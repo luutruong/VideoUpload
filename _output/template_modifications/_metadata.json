@@ -20,8 +20,14 @@
     "public/TVU_post_macros.json": {
         "hash": "bc7b549af07ea20c0148cbd01eae570c"
     },
+    "public/tvu_profile_post_edit.json": {
+        "hash": "c1cafaee409c782374b9553ceb81e3f7"
+    },
+    "public/tvu_profile_post_edit1.json": {
+        "hash": "05258637d33ebeed6d5f91311f5bcd8a"
+    },
     "public/tvu_profile_post_macros.json": {
-        "hash": "fd5f647ab36c4b384642a6bf886a868a"
+        "hash": "9729d400faa2786e99e8ac541f732487"
     },
     "public/tvu_profile_post_macros2.json": {
         "hash": "5ac0074be4588ddd1fd9e598f723dc34"

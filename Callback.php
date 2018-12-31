@@ -47,14 +47,12 @@ class Callback
 
     public static function renderProfilePostUploadButton($_, array $params, Templater $templater)
     {
-        if (empty($params['user'])) {
+        if (empty($params['key'])) {
             return null;
         }
-        /** @var User $user */
-        $user = $params['user'];
         /** @var ProfilePostForm $formData */
         $formData = \XF::app()->data('Truonglv\VideoUpload:ProfilePostForm');
-        $attachmentData = $formData->getAttachmentData($user->user_id);
+        $attachmentData = $formData->getAttachmentData($params['key']);
 
         if (empty($attachmentData)) {
             return null;

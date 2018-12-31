@@ -19,7 +19,7 @@ class Member extends XFCP_Member
             /** @var \XF\Repository\Attachment $attachmentRepo */
             $attachmentRepo = $this->repository('XF:Attachment');
 
-            if ($user->user_id === \XF::visitor()->user_id) {
+            if ($this->tvuCanUploadAttachments($user)) {
                 $attachmentHash = md5(sprintf('%s%s%d',
                     __METHOD__,
                     $this->app()->config('globalSalt'),
@@ -33,7 +33,7 @@ class Member extends XFCP_Member
 
                 /** @var ProfilePostForm $formData */
                 $formData = $this->data('Truonglv\VideoUpload:ProfilePostForm');
-                $formData->addAttachmentData($user, $attachmentData);
+                $formData->addAttachmentData($user->user_id, $attachmentData);
             }
 
             $profilePosts = $response->getParam('profilePosts');
@@ -48,12 +48,17 @@ class Member extends XFCP_Member
         /** @var \Truonglv\VideoUpload\XF\Service\ProfilePost\Creator $creator */
         $creator = parent::setupProfilePostCreate($userProfile);
 
-        if ($userProfile->User->user_id === \XF::visitor()->user_id
-            && $userProfile->User->hasPermission('general', 'tvu_uploadVideos')
-        ) {
+        if ($this->tvuCanUploadAttachments($userProfile->User)) {
             $creator->setTVUAttachmentHash($this->filter('attachment_hash', 'str'));
         }
 
         return $creator;
+    }
+
+    protected function tvuCanUploadAttachments(User $user)
+    {
+        return ($user->user_id === \XF::visitor()->user_id
+            && $user->hasPermission('general', 'tvu_uploadVideos')
+        );
     }
 }

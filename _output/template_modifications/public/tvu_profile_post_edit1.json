@@ -1,0 +1,9 @@
+{
+    "template": "profile_post_edit",
+    "description": "Insert init 'attachment-manager' in form",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "action=\"{{ link('profile-posts/edit', $profilePost) }}\"",
+    "replace": "data-xf-init=\"attachment-manager\" $0"
+}

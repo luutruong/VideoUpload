@@ -5,19 +5,17 @@
  */
 namespace Truonglv\VideoUpload\Data;
 
-use XF\Entity\User;
-
 class ProfilePostForm
 {
     private $attachmentData = [];
 
-    public function addAttachmentData(User $user, array $attachmentData)
+    public function addAttachmentData($key, array $attachmentData)
     {
-        $this->attachmentData[$user->user_id] = $attachmentData;
+        $this->attachmentData[$key] = $attachmentData;
     }
 
-    public function getAttachmentData($userId)
+    public function getAttachmentData($key)
     {
-        return isset($this->attachmentData[$userId]) ? $this->attachmentData[$userId] : null;
+        return isset($this->attachmentData[$key]) ? $this->attachmentData[$key] : null;
     }
 }
