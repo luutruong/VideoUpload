@@ -6,8 +6,6 @@
 
 namespace Truonglv\VideoUpload\ControllerPlugin;
 
-use XF\Entity\Post;
-use XF\Entity\Thread;
 use Truonglv\VideoUpload\Utils\File;
 use XF\Mvc\Entity\AbstractCollection;
 use XF\ControllerPlugin\AbstractPlugin;

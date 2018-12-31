@@ -7,7 +7,6 @@
 namespace Truonglv\VideoUpload;
 
 use XF\Entity\Post;
-use XF\Entity\Thread;
 use XF\Entity\Attachment;
 use XF\Template\Templater;
 use Truonglv\VideoUpload\Data\Video;

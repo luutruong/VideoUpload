@@ -6,9 +6,9 @@
 
 namespace Truonglv\VideoUpload\Repository;
 
+use XF\Entity\User;
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
-use XF\Entity\User;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Repository;
 

@@ -6,11 +6,11 @@
 
 namespace Truonglv\VideoUpload\Attachment;
 
-use Truonglv\VideoUpload\Entity\Video;
 use XF\Entity\User;
 use XF\Entity\Attachment;
 use XF\Mvc\Entity\Entity;
 use XF\Attachment\AbstractHandler;
+use Truonglv\VideoUpload\Entity\Video;
 
 class ProfilePost extends AbstractHandler
 {
