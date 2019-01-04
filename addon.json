@@ -1,8 +1,8 @@
 {
     "legacy_addon_id": "Truonglv_VideoUpload",
     "title": "[tl] Thread Video Upload",
-    "description": "Advanced video upload for thread",
-    "version_id": 2000200,
+    "description": "Advanced video upload for thread & profile posts",
+    "version_id": 2000201,
     "version_string": "2.0.2",
     "dev": "Truonglv",
     "dev_url": "https://nobita.me",

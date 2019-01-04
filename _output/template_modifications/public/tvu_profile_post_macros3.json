@@ -3,7 +3,7 @@
     "description": "Render attachments",
     "execution_order": 10,
     "enabled": true,
-    "action": "str_replace",
-    "find": "<article class=\"message-body\">\n\t\t\t\t\t\t\t{{ structured_text($profilePost.message) }}\n\t\t\t\t\t\t</article>",
+    "action": "preg_replace",
+    "find": "#<article\\s+class=\"message-body\"[^>]*>.+?</article>#s",
     "replace": "$0\n<xf:callback class=\"Truonglv\\VideoUpload\\Callback\"\n\t\t\t method=\"renderPostAttachments\"\n\t\t\t params=\"{'entity': $profilePost, 'canViewAttachments': true}\" />"
 }
