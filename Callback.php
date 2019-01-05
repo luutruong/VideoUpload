@@ -119,7 +119,7 @@ class Callback
         $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
         $videos = $videoData->getVideos();
 
-        if (!$videos) {
+        if (!$videos || !$videos->count()) {
             $viewLink = \XF::app()->router('public')
                 ->buildLink('full:attachments', $attachment);
             $viewPhrase = \XF::phrase('view_attachment_x', [

@@ -37,9 +37,11 @@ class Video extends AbstractPlugin
 
             $videos = $videoFinder->fetch();
 
-            /** @var \Truonglv\VideoUpload\Data\Video $videoData */
-            $videoData = $this->data('Truonglv\VideoUpload:Video');
-            $videoData->addVideos($videos);
+            if ($videos->count() > 0) {
+                /** @var \Truonglv\VideoUpload\Data\Video $videoData */
+                $videoData = $this->data('Truonglv\VideoUpload:Video');
+                $videoData->addVideos($videos);
+            }
         }
     }
 }
