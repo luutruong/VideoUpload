@@ -6,11 +6,15 @@
 
 namespace Truonglv\VideoUpload\Repository;
 
+use XF\Entity\Post;
 use XF\Entity\User;
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
+use XF\FileWrapper;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Repository;
+use XF\Service\Attachment\Preparer;
+use XF\Util\File;
 
 class Video extends Repository
 {
@@ -42,6 +46,49 @@ class Video extends Repository
         foreach ($videoFinder->fetch() as $video) {
             $video->delete();
         }
+    }
+
+    public function postToProfile(\Truonglv\VideoUpload\Entity\Video $video, Post $post)
+    {
+        $user = $post->User;
+
+        /** @var \Truonglv\VideoUpload\XF\Service\ProfilePost\Creator $creator */
+        $creator = \XF::asVisitor($user, function () use($user) {
+            return $this->app()->service('XF:ProfilePost\Creator', $user->Profile);
+        });
+
+        $tempFile = File::copyAbstractedPathToTempFile($video->Attachment->Data->getAbstractedDataPath());
+        /** @var \XF\Repository\Attachment $attachmentRepo */
+        $attachmentRepo = $this->repository('XF:Attachment');
+        $handler = $attachmentRepo->getAttachmentHandler('profile_post');
+
+        $file = new FileWrapper($tempFile, $video->Attachment->filename);
+        $attachmentHash = md5(uniqid('', true));
+
+        /** @var Preparer $preparer */
+        $preparer = $this->app()->service('XF:Attachment\Preparer');
+        $attachment = $preparer->insertAttachment($handler, $file, $user, $attachmentHash);
+        $attachment->Data->fastUpdate([
+            'width' => $video->Attachment->Data->width,
+            'height' => $video->Attachment->Data->height
+        ]);
+
+        $creator->setTVUAttachmentHash($attachmentHash);
+        $creator->setContent("\0");
+        if (!$creator->validate($errors)) {
+            return;
+        }
+
+        $creator->save();
+
+        /** @var \Truonglv\VideoUpload\Entity\Video $videoEntity */
+        $videoEntity = $this->em->create('Truonglv\VideoUpload:Video');
+
+        $videoEntity->content_type = 'user';
+        $videoEntity->content_id = $user->user_id;
+        $videoEntity->attachment_id = $attachment->attachment_id;
+
+        $videoEntity->save();
     }
 
     public function logError($message)

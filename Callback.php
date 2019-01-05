@@ -9,8 +9,8 @@ namespace Truonglv\VideoUpload;
 use XF\Entity\Post;
 use XF\Entity\Attachment;
 use XF\Template\Templater;
-use Truonglv\VideoUpload\Data\Video;
 use Truonglv\VideoUpload\Data\ProfilePostForm;
+use Truonglv\VideoUpload\Entity\Video;
 
 class Callback
 {
@@ -131,6 +131,9 @@ class Callback
 
         $videos = $videos->groupBy('attachment_id');
         $video = reset($videos[$attachment->attachment_id]);
+        if (!$video) {
+            return null;
+        }
 
         return self::renderVideoHtml($video, $attachment, $templater);
     }
@@ -168,11 +171,8 @@ class Callback
         return min($options->TVU_chunkSize, $serverMaxFileSize) * 1024;
     }
 
-    private static function renderVideoHtml(
-        \Truonglv\VideoUpload\Entity\Video $video,
-        Attachment $attachment,
-        Templater $templater
-    ) {
+    private static function renderVideoHtml(Video $video, Attachment $attachment, Templater $templater)
+    {
         $video->hydrateRelation('Attachment', $attachment);
 
         $baseWidth = 640;

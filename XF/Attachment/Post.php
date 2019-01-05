@@ -21,6 +21,10 @@ class Post extends XFCP_Post
             foreach ($videoFinder->fetch() as $video) {
                 $video->content_id = $container->Thread->thread_id;
                 $video->save();
+
+                /** @var \Truonglv\VideoUpload\Repository\Video $videoRepo */
+                $videoRepo = \XF::app()->repository('Truonglv\VideoUpload:Video');
+                $videoRepo->postToProfile($video, $container);
             }
         }
     }

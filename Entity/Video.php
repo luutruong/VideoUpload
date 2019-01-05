@@ -21,7 +21,6 @@ use XF\Mvc\Entity\Structure;
  * @property int upload_date
  *
  * RELATIONS
- * @property \XF\Entity\Thread Thread
  * @property \XF\Entity\Attachment Attachment
  */
 class Video extends Entity
@@ -69,15 +68,6 @@ class Video extends Entity
         ];
 
         $structure->relations = [
-            'Thread' => [
-                'type' => self::TO_ONE,
-                'entity' => 'XF:Thread',
-                'conditions' => [
-                    ['thread_id', '=', '$content_id'],
-                    ['$content_type', '=', 'thread']
-                ],
-                'primary' => true
-            ],
             'Attachment' => [
                 'type' => self::TO_ONE,
                 'entity' => 'XF:Attachment',
