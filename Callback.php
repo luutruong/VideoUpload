@@ -9,8 +9,8 @@ namespace Truonglv\VideoUpload;
 use XF\Entity\Post;
 use XF\Entity\Attachment;
 use XF\Template\Templater;
-use Truonglv\VideoUpload\Data\ProfilePostForm;
 use Truonglv\VideoUpload\Entity\Video;
+use Truonglv\VideoUpload\Data\ProfilePostForm;
 
 class Callback
 {
@@ -72,7 +72,7 @@ class Callback
             return null;
         }
 
-        /** @var Video $videoData */
+        /** @var \Truonglv\VideoUpload\Data\Video $videoData */
         $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
         $videos = $videoData->getVideos();
         if ($videos === null || !$videos->count()) {
@@ -115,7 +115,7 @@ class Callback
         /** @var Attachment $attachment */
         $attachment = $params['attachment'];
 
-        /** @var Video $videoData */
+        /** @var \Truonglv\VideoUpload\Data\Video $videoData */
         $videoData = \XF::app()->data('Truonglv\VideoUpload:Video');
         $videos = $videoData->getVideos();
 

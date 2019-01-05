@@ -6,15 +6,15 @@
 
 namespace Truonglv\VideoUpload\Repository;
 
+use XF\Util\File;
 use XF\Entity\Post;
 use XF\Entity\User;
+use XF\FileWrapper;
 use XF\Entity\Thread;
 use XF\Entity\Attachment;
-use XF\FileWrapper;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Repository;
 use XF\Service\Attachment\Preparer;
-use XF\Util\File;
 
 class Video extends Repository
 {
@@ -53,7 +53,7 @@ class Video extends Repository
         $user = $post->User;
 
         /** @var \Truonglv\VideoUpload\XF\Service\ProfilePost\Creator $creator */
-        $creator = \XF::asVisitor($user, function () use($user) {
+        $creator = \XF::asVisitor($user, function () use ($user) {
             return $this->app()->service('XF:ProfilePost\Creator', $user->Profile);
         });
 
