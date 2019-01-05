@@ -25,6 +25,11 @@ namespace Truonglv\VideoUpload\XF\Pub\Controller
 	class XFCP_Thread extends \XF\Pub\Controller\Thread {}
 }
 
+namespace Truonglv\VideoUpload\XF\Service\Post
+{
+	class XFCP_Preparer extends \XF\Service\Post\Preparer {}
+}
+
 namespace Truonglv\VideoUpload\XF\Service\ProfilePost
 {
 	class XFCP_Creator extends \XF\Service\ProfilePost\Creator {}

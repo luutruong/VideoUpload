@@ -29,6 +29,9 @@
     "XF-Pub-Controller-Thread_Truonglv-VideoUpload-XF-Pub-Controller-Thread.json": {
         "hash": "4598bf8853a316a3dce3803697be7a90"
     },
+    "XF-Service-Post-Preparer_Truonglv-VideoUpload-XF-Service-Post-Preparer.json": {
+        "hash": "5207d5b010557835ed71821a5189dfce"
+    },
     "XF-Service-ProfilePost-Creator_Truonglv-VideoUpload-XF-Service-ProfilePost-Creator.json": {
         "hash": "ed30c1278a3304ebc3baae9a1db13e1d"
     },
