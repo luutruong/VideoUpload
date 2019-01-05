@@ -221,6 +221,12 @@
         "version_string": "2.0.0",
         "hash": "d41d8cd98f00b204e9800998ecf8427e"
     },
+    "permission.forum_tvu_autoPostProfile.txt": {
+        "global_cache": false,
+        "version_id": 2000300,
+        "version_string": "2.0.3",
+        "hash": "feff30fa3adbb8f631d828527e6e1674"
+    },
     "permission.general_tvu_uploadVideos.txt": {
         "global_cache": false,
         "version_id": 2000000,

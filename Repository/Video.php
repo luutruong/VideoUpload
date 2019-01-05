@@ -51,6 +51,9 @@ class Video extends Repository
     public function postToProfile(\Truonglv\VideoUpload\Entity\Video $video, Post $post)
     {
         $user = $post->User;
+        if (!$user->hasNodePermission($post->Thread->node_id, 'tvu_autoPostProfile')) {
+            return;
+        }
 
         /** @var \Truonglv\VideoUpload\XF\Service\ProfilePost\Creator $creator */
         $creator = \XF::asVisitor($user, function () use ($user) {
@@ -74,7 +77,7 @@ class Video extends Repository
         ]);
 
         $creator->setTVUAttachmentHash($attachmentHash);
-        $creator->setContent("\0");
+        $creator->setContent($post->Thread->title);
         if (!$creator->validate($errors)) {
             return;
         }
