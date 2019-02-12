@@ -3,11 +3,12 @@
  * @license
  * Copyright 2019 TruongLuu. All Rights Reserved.
  */
+
 namespace Truonglv\VideoUpload\Job;
 
-use Truonglv\VideoUpload\Service\Aws\AbstractAws;
-use XF\Job\AbstractJob;
 use XF\Timer;
+use XF\Job\AbstractJob;
+use Truonglv\VideoUpload\Service\Aws\AbstractAws;
 
 class Uploader extends AbstractJob
 {

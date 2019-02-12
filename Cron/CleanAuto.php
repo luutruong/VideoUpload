@@ -8,7 +8,6 @@ namespace Truonglv\VideoUpload\Cron;
 
 use XF\Util\File;
 use League\Flysystem\FileNotFoundException;
-use Truonglv\VideoUpload\Service\Aws\AbstractAws;
 
 class CleanAuto
 {

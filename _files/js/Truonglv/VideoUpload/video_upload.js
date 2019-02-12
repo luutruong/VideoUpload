@@ -1,5 +1,5 @@
-!function($, window, document, _undefined) {
-    "use strict";
+!(function($, window, document, _undefined) {
+    'use strict';
 
     XF.Truonglv_VideoUpload = XF.Element.newHandler({
         options: {
@@ -9,7 +9,7 @@
             uploadUrl: null,
             chunkSize: 0,
             simultaneousUploads: 3,
-            allowedExtensions: ''
+            allowedExtensions: '',
         },
 
         flow: null,
@@ -29,9 +29,11 @@
             }
             this.attachmentManager = attachmentManager;
 
-            this.attachmentManager
-                .$filesContainer
-                .on('click', this.attachmentManager.options.actionButton, XF.proxy(this, 'actionButtonClick'));
+            this.attachmentManager.$filesContainer.on(
+                'click',
+                this.attachmentManager.options.actionButton,
+                XF.proxy(this, 'actionButtonClick')
+            );
 
             var flow = this.setupFlow();
             if (!flow) {
@@ -73,7 +75,9 @@
         setupUploadButton: function(flow) {
             var $button = this.$target,
                 accept = $button.data('accept') || '',
-                $target = $('<span />').insertAfter($button).append($button);
+                $target = $('<span />')
+                    .insertAfter($button)
+                    .append($button);
 
             if (accept === '.') {
                 accept = '';
@@ -81,9 +85,11 @@
                 accept = '.' + accept.toLowerCase().replace(/,/g, ',.');
             }
 
-            $button.click(function(e) { e.preventDefault(); });
+            $button.click(function(e) {
+                e.preventDefault();
+            });
             flow.assignBrowse($target[0], false, false, {
-                accept: accept
+                accept: accept,
             });
 
             var $file = $target.find('input[type=file]');
@@ -102,7 +108,7 @@
                 query: $.extend(this.attachmentManager.uploadQueryParams(), {
                     attachmentHash: this.options.attachmentHash,
                     contentType: this.options.contentType,
-                    contextData: JSON.stringify(this.options.contextData)
+                    contextData: JSON.stringify(this.options.contextData),
                 }),
                 chunkSize: this.options.chunkSize,
                 maxFiles: 1,
@@ -111,32 +117,29 @@
                 simultaneousUploads: this.options.simultaneousUploads,
                 allowDuplicateUploads: true,
                 progressCallbacksInterval: 100,
-                readFileFn: function (fileObj, startByte, endByte, fileType, chunk) {
+                readFileFn: function(fileObj, startByte, endByte, fileType, chunk) {
                     var function_name = 'slice';
 
-                    if (fileObj.file.slice) function_name =  'slice';
+                    if (fileObj.file.slice) function_name = 'slice';
                     else if (fileObj.file.mozSlice) function_name = 'mozSlice';
                     else if (fileObj.file.webkitSlice) function_name = 'webkitSlice';
 
-                    if (!fileType)
-                    {
+                    if (!fileType) {
                         fileType = '';
                     }
 
                     chunk.readFinished(fileObj.file[function_name](startByte, endByte, fileType));
-                }
+                },
             };
         },
 
-        setupFlow: function()
-        {
+        setupFlow: function() {
             var options = this.getFlowOptions(),
                 flow = new Flow(options),
                 self = this;
 
             if (!flow.support) {
-                if (!window.FustyFlow)
-                {
+                if (!window.FustyFlow) {
                     return null;
                 }
 
@@ -177,7 +180,7 @@
                 contextData: JSON.stringify(this.options.contextData),
                 attachmentHash: this.options.attachmentHash,
                 contentType: this.options.contentType,
-                isCompleted: true
+                isCompleted: true,
             };
 
             onResponse = function(data) {
@@ -191,11 +194,10 @@
                 }
             };
 
-            XF.ajax('POST', this.options.uploadUrl, data, onResponse)
-                .always(function() {
-                    _this.disableUploadButton(false);
-                    _this.attachmentManager.setUploading(false);
-                });
+            XF.ajax('POST', this.options.uploadUrl, data, onResponse).always(function() {
+                _this.disableUploadButton(false);
+                _this.attachmentManager.setUploading(false);
+            });
         },
 
         uploadError: function(file, message, chunk) {
@@ -207,7 +209,7 @@
         fileAdded: function(file) {
             var $html = this.attachmentManager.applyUploadTemplate({
                 filename: file.name,
-                uploading: true
+                uploading: true,
             });
             this.attachmentManager.resizeProgress($html, 0);
 
@@ -224,5 +226,4 @@
     });
 
     XF.Element.register('tvu-video-upload', 'XF.Truonglv_VideoUpload');
-}
-(jQuery, this, document);
+})(jQuery, this, document);
