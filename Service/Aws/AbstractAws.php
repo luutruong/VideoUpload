@@ -6,6 +6,7 @@
 
 namespace Truonglv\VideoUpload\Service\Aws;
 
+use XF\Timer;
 use XF\Util\File;
 use XF\Entity\Attachment;
 use XF\Service\AbstractService;
@@ -19,7 +20,7 @@ abstract class AbstractAws extends AbstractService
 
     private $s3Client;
 
-    final public function bulkUploads()
+    final public function bulkUploads(Timer $timer = null)
     {
         $itemsPerProcess = $this->app->options()->TVU_maxUploadPerProcess;
         if (empty($itemsPerProcess)) {
@@ -32,7 +33,7 @@ abstract class AbstractAws extends AbstractService
 
         $videoFinder = $this->finder('Truonglv\VideoUpload:Video');
         $videoFinder->with('Attachment');
-        $videoFinder->where('thread_id', '>', 0);
+        $videoFinder->where('content_id', '>', 0);
         $videoFinder->where('remote_upload_date', 0);
 
         $videoFinder->order('upload_date');
@@ -55,6 +56,10 @@ abstract class AbstractAws extends AbstractService
                 $video->remote_url = $this->getBaseUrl() . '/' . ltrim($savePath, '/');
                 $video->remote_upload_date = \XF::$time;
                 $video->save();
+            }
+
+            if ($timer && $timer->limitExceeded()) {
+                break;
             }
         }
     }

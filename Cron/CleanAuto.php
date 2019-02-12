@@ -34,8 +34,8 @@ class CleanAuto
         }
         $db->delete('xf_truonglv_videoupload_video_part', 'upload_date < ?', [$cutOff]);
 
-        /** @var AbstractAws $service */
-        $service = \XF::service('Truonglv\VideoUpload:Aws\DigitalOcean');
-        $service->bulkUploads();
+        \XF::app()
+            ->jobManager()
+            ->enqueueUnique('tvu_uploader', 'Truonglv\VideoUpload:Uploader');
     }
 }
